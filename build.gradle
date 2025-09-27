@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainClassName = 'org.example.Main'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.yaml:snakeyaml:1.33'
+    // 添加lombok依赖
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'com.alibaba:fastjson:1.2.83'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaExec) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
