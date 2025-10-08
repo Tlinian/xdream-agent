@@ -1,52 +1,42 @@
-# 项目根目录通用忽略规则
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# 操作系统文件
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# 编辑器配置
-.vscode/
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-.idea/
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
 *.iml
 *.ipr
-*.iws
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# 日志文件
-*.log
-*.log.*
-logs/
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
-# 临时文件
-*.tmp
-*.temp
-.cache/
-.temp/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 
-# 构建和打包目录
-build/
-dist/
+### VS Code ###
+.vscode/
 
-# 测试覆盖率
-coverage/
-.nyc_output/
-
-# 环境变量文件
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# 独立的git子仓库
-backend/
-frontend/
-
-# 保留其他子目录的.gitignore
-!*/.gitignore
+### Mac OS ###
+.DS_Store
