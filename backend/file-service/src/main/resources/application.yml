@@ -1,0 +1,182 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /file
+
+spring:
+  application:
+    name: file-service
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 6
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
+
+# Eureka注册中心配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# 日志配置
+logging:
+  level:
+    com.xdream.file: INFO
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+  file:
+    name: logs/file-service.log
+
+# 文件存储配置
+file:
+  storage:
+    # 存储类型：local, minio, aliyun, tencent
+    type: local
+    
+    # 本地存储配置
+    local:
+      base-path: ${FILE_STORAGE_PATH:./uploads}
+      max-size: 10GB
+    
+    # MinIO配置（对象存储）
+    minio:
+      endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+      access-key: ${MINIO_ACCESS_KEY:minioadmin}
+      secret-key: ${MINIO_SECRET_KEY:minioadmin}
+      bucket: ${MINIO_BUCKET:xdream-files}
+      secure: false
+    
+    # 阿里云OSS配置
+    aliyun:
+      endpoint: ${ALIYUN_OSS_ENDPOINT:}
+      access-key: ${ALIYUN_OSS_ACCESS_KEY:}
+      secret-key: ${ALIYUN_OSS_SECRET_KEY:}
+      bucket: ${ALIYUN_OSS_BUCKET:}
+    
+    # 腾讯云COS配置
+    tencent:
+      secret-id: ${TENCENT_COS_SECRET_ID:}
+      secret-key: ${TENCENT_COS_SECRET_KEY:}
+      region: ${TENCENT_COS_REGION:}
+      bucket: ${TENCENT_COS_BUCKET:}
+  
+  # 文件类型配置
+  types:
+    # 支持的文件类型
+    supported:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+      - application/pdf
+      - text/plain
+      - text/markdown
+      - application/msword
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/vnd.ms-excel
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - application/vnd.ms-powerpoint
+      - application/vnd.openxmlformats-officedocument.presentationml.presentation
+      - application/zip
+      - application/x-rar-compressed
+    
+    # 图片文件类型
+    images:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+    
+    # 文档文件类型
+    documents:
+      - application/pdf
+      - text/plain
+      - text/markdown
+      - application/msword
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/vnd.ms-excel
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - application/vnd.ms-powerpoint
+      - application/vnd.openxmlformats-officedocument.presentationml.presentation
+  
+  # 文件分享配置
+  sharing:
+    enabled: true
+    default-expire-hours: 24
+    max-expire-hours: 720 # 30天
+    default-max-downloads: 100
+    max-share-per-file: 10
+
+# 限流配置
+rate-limit:
+  enabled: true
+  uploads-per-minute: 10
+  downloads-per-minute: 100
+  uploads-per-hour: 100
+  downloads-per-hour: 1000
+
+# 开发环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  # 开发环境文件存储路径
+  servlet:
+    multipart:
+      location: ${TEMP_DIR:./temp}
+
+# 生产环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  # 生产环境文件存储配置
+  servlet:
+    multipart:
+      location: ${TEMP_DIR:/tmp/xdream-files}
+
+# 日志级别调整（生产环境）
+logging:
+  level:
+    com.xdream.file: WARN
+    org.springframework.web: WARN
+    io.minio: WARN

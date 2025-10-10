@@ -1,0 +1,109 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.app-sider {
+  background: $layout-sider-background;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+  position: relative;
+  z-index: 10;
+
+  .sider-content {
+    height: 100%;
+    overflow-y: auto;
+    @include hide-scrollbar;
+
+    .sider-menu {
+      background: transparent;
+      border-right: none;
+      padding: 16px 0;
+
+      .ant-menu-item,
+      .ant-menu-submenu-title {
+        color: rgba(255, 255, 255, 0.65);
+        margin: 4px 8px;
+        border-radius: $border-radius-base;
+        
+        &:hover {
+          color: #fff;
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        &.ant-menu-item-selected {
+          color: #fff;
+          background-color: $primary-color;
+          
+          &::after {
+            display: none;
+          }
+        }
+
+        .ant-menu-item-icon {
+          font-size: 16px;
+          color: rgba(255, 255, 255, 0.65);
+          
+          .ant-menu-item-selected & {
+            color: #fff;
+          }
+        }
+      }
+
+      .ant-menu-submenu {
+        .ant-menu-submenu-title {
+          .ant-menu-submenu-arrow {
+            color: rgba(255, 255, 255, 0.65);
+          }
+        }
+
+        &.ant-menu-submenu-open {
+          .ant-menu-submenu-title {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            
+            .ant-menu-submenu-arrow {
+              color: #fff;
+            }
+          }
+        }
+
+        .ant-menu-sub {
+          background-color: #000c17;
+          
+          .ant-menu-item {
+            padding-left: 48px !important;
+            
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.08);
+            }
+          }
+        }
+      }
+
+      &.ant-menu-inline-collapsed {
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+          padding: 0 16px !important;
+          
+          .ant-menu-item-icon {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  // 折叠动画
+  &.ant-layout-sider-collapsed {
+    .sider-content {
+      .sider-menu {
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+          padding: 0 16px !important;
+          
+          .ant-menu-item-icon {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

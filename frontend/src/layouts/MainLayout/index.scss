@@ -1,0 +1,233 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.main-layout {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.main-sider {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  
+  .logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-color);
+    
+    img {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
+    
+    .logo-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-left: 4px;
+      
+      .logo-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        white-space: nowrap;
+        margin-bottom: 2px;
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #c084fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+      }
+      
+      .logo-subtitle {
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        opacity: 0.8;
+        font-style: italic;
+        letter-spacing: 0.3px;
+        line-height: 1.2;
+      }
+    }
+  }
+  
+  .main-menu {
+    border-right: none;
+    
+    .ant-menu-item,
+    .ant-menu-submenu-title {
+      margin: 4px 8px;
+      border-radius: 6px;
+      
+      &:hover {
+        background: var(--bg-hover) !important;
+      }
+      
+      &.ant-menu-item-selected {
+        background: var(--bg-selected) !important;
+        color: var(--color-primary) !important;
+        
+        &::after {
+          display: none;
+        }
+      }
+    }
+    
+    .ant-menu-submenu {
+      .ant-menu-submenu-title {
+        &:hover {
+          background: var(--bg-hover) !important;
+        }
+      }
+      
+      .ant-menu-sub {
+        background: transparent;
+        
+        .ant-menu-item {
+          padding-left: 48px !important;
+          
+          &:hover {
+            background: var(--bg-hover) !important;
+          }
+          
+          &.ant-menu-item-selected {
+            background: var(--bg-selected) !important;
+            color: var(--color-primary) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.main-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 200px;
+  z-index: 99;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: left 0.2s;
+  
+  .header-left {
+    flex: 1;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    
+    .user-avatar {
+      cursor: pointer;
+      transition: transform 0.2s;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.main-content {
+  margin-left: 200px;
+  margin-top: 64px;
+  min-height: calc(100vh - 64px - 70px);
+  background: var(--bg-secondary);
+  transition: margin-left 0.2s;
+  
+  .content-wrapper {
+    padding: 24px;
+    min-height: 100%;
+    
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+  }
+}
+
+.main-footer {
+  margin-left: 200px;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  transition: margin-left 0.2s;
+  
+  .footer-content {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+}
+
+// 侧边栏折叠状态
+.main-sider.ant-layout-sider-collapsed {
+  & + .ant-layout {
+    .main-header {
+      left: 80px;
+    }
+    
+    .main-content,
+    .main-footer {
+      margin-left: 80px;
+    }
+  }
+}
+
+// 暗色主题适配
+[data-theme='dark'] {
+  .main-layout {
+    background: var(--bg-primary);
+  }
+  
+  .main-header {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .main-content {
+    background: var(--bg-secondary);
+  }
+  
+  .main-footer {
+    background: var(--bg-primary);
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .main-sider {
+    position: fixed;
+    z-index: 1000;
+    
+    &.ant-layout-sider-collapsed {
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      flex: 0 0 0 !important;
+      overflow: hidden;
+    }
+  }
+  
+  .main-header {
+    left: 0 !important;
+    padding: 0 16px;
+  }
+  
+  .main-content,
+  .main-footer {
+    margin-left: 0 !important;
+  }
+}

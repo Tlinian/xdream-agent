@@ -1,0 +1,209 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.settings-page {
+  .settings-header {
+    margin-bottom: 24px;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+    border-radius: $border-radius-lg;
+    border: 1px solid $border-color-split;
+
+    h2 {
+      margin-bottom: 8px;
+      color: $text-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      .anticon {
+        color: $primary-color;
+      }
+    }
+
+    p {
+      margin: 0;
+      color: $text-color-secondary;
+      font-size: 16px;
+    }
+  }
+
+  .settings-tabs {
+    margin-bottom: 24px;
+
+    .ant-tabs-nav {
+      margin-bottom: 24px;
+      
+      .ant-tabs-tab {
+        padding: 12px 16px;
+        font-size: 14px;
+        
+        &:hover {
+          color: $primary-color;
+        }
+        
+        &.ant-tabs-tab-active {
+          .anticon {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .ant-tabs-content {
+      padding: 0;
+    }
+  }
+
+  .settings-card {
+    background: #fff;
+    border-radius: $border-radius-base;
+    @include card-shadow;
+
+    .ant-card-head {
+      border-bottom: 1px solid $border-color-split;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .ant-form-item {
+      margin-bottom: 20px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .ant-form-item-label {
+        font-weight: 500;
+        color: $text-color;
+        padding-bottom: 8px;
+      }
+
+      .ant-form-item-control-input {
+        min-height: 32px;
+      }
+    }
+
+    .ant-input,
+    .ant-select-selector {
+      border-radius: $border-radius-base;
+      border: 1px solid $border-color-base;
+
+      &:hover {
+        border-color: $primary-color;
+      }
+
+      &:focus,
+      &.ant-input-affix-wrapper-focused,
+      &.ant-select-focused .ant-select-selector {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+    }
+
+    .ant-select-selector {
+      height: 32px;
+      padding: 4px 11px;
+    }
+
+    .ant-switch {
+      background-color: rgba(0, 0, 0, 0.25);
+
+      &.ant-switch-checked {
+        background-color: $primary-color;
+      }
+    }
+
+    .ant-divider {
+      margin: 24px 0;
+      border-top: 1px solid $border-color-split;
+    }
+  }
+
+  .system-info-card {
+    background: #fff;
+    border-radius: $border-radius-base;
+    @include card-shadow;
+
+    .ant-card-head {
+      border-bottom: 1px solid $border-color-split;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .system-info {
+      padding: 8px 0;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid $border-color-split;
+
+        &:last-child {
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+
+        .ant-typography {
+          margin: 0;
+          
+          &:first-child {
+            min-width: 100px;
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  @include mobile {
+    .settings-header {
+      padding: 16px;
+
+      h2 {
+        font-size: 20px;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    .settings-tabs {
+      .ant-tabs-nav {
+        .ant-tabs-tab {
+          padding: 8px 12px;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .settings-card,
+    .system-info-card {
+      .ant-card-body {
+        padding: 16px;
+      }
+    }
+
+    .system-info {
+      .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+
+        .ant-typography {
+          &:first-child {
+            min-width: auto;
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

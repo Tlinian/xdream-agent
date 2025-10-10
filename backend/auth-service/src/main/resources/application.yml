@@ -1,0 +1,115 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: auth-service
+  
+  # 数据库配置
+  datasource:
+    url: jdbc:h2:mem:authdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  # JPA配置
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  
+  # H2控制台配置
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+# JWT配置
+jwt:
+  secret: xdream-agent-secret-key-2024-xdream-agent-secret-key
+  access-token-expiration: 3600  # 1小时
+  refresh-token-expiration: 86400  # 24小时
+
+# 应用配置
+application:
+  jwt:
+    secret: ${jwt.secret}
+    access-token-expiration: ${jwt.access-token-expiration}
+    refresh-token-expiration: ${jwt.refresh-token-expiration}
+  cors:
+    allowed-origins: ["*"]
+    allowed-methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allowed-headers: ["*"]
+    allow-credentials: true
+
+# 日志配置
+logging:
+  level:
+    com.xdream: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# 开发环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:authdb-dev
+
+# 生产环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/xdream_auth
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:xdream}
+    password: ${DB_PASSWORD:password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+logging:
+  level:
+    com.xdream: INFO
+    org.springframework.security: INFO

@@ -1,0 +1,340 @@
+.audio-analysis-page {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .page-header {
+    margin-bottom: 24px;
+    text-align: center;
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #1890ff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .page-description {
+      font-size: 16px;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .analysis-settings-card {
+    .audio-upload {
+      .ant-upload-drag-icon {
+        margin-bottom: 16px;
+      }
+    }
+
+    .uploaded-file-info {
+      margin-top: 12px;
+      padding: 12px;
+      background: #f6f7f9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .current-task-card {
+    .task-info {
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h4 {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+
+      .task-progress {
+        margin-bottom: 16px;
+      }
+
+      .task-details {
+        .detail-item {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 12px;
+          padding: 8px 0;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .label {
+            font-weight: 500;
+            color: #666;
+          }
+
+          .analysis-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+          }
+        }
+      }
+
+      .task-actions {
+        margin-top: 16px;
+        text-align: center;
+      }
+    }
+
+    .no-task {
+      text-align: center;
+      padding: 48px 24px;
+      color: #999;
+
+      p {
+        margin: 8px 0;
+        font-size: 16px;
+      }
+
+      .hint {
+        font-size: 14px;
+        color: #ccc;
+      }
+    }
+  }
+
+  .history-card {
+    .history-item {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .history-item-desc {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+
+        .item-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          font-size: 12px;
+          color: #666;
+        }
+
+        .item-status {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
+        }
+      }
+    }
+  }
+
+  .result-section {
+    padding: 16px;
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      h4 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+
+    .transcription-text {
+      background: #f6f7f9;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .segments-timeline {
+      h5 {
+        margin-bottom: 12px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .segment-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .segment-time {
+          font-weight: 500;
+          color: #1890ff;
+          min-width: 120px;
+        }
+
+        .segment-text {
+          flex: 1;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .sentiment-overview {
+      margin-bottom: 24px;
+
+      .sentiment-tag {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+
+        .confidence {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+
+    .emotions-detailed {
+      h5 {
+        margin-bottom: 16px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .emotion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        .emotion-name {
+          min-width: 80px;
+          font-weight: 500;
+        }
+
+        .emotion-score {
+          min-width: 40px;
+          text-align: right;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .speaker-overview {
+      margin-bottom: 24px;
+    }
+
+    .speaker-segments {
+      h5 {
+        margin-bottom: 16px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .speaker-segment {
+        margin-bottom: 16px;
+        padding: 12px;
+        background: #f6f7f9;
+        border-radius: 8px;
+
+        .segment-text {
+          margin-top: 8px;
+          font-size: 14px;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    .music-info {
+      .music-details {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .music-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .label {
+            min-width: 60px;
+            font-weight: 500;
+          }
+
+          .instruments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+          }
+        }
+      }
+    }
+
+    .quality-overview {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .quality-details {
+      h5 {
+        margin-bottom: 16px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .quality-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        .label {
+          min-width: 80px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .audio-analysis-page {
+    padding: 16px;
+
+    .page-title {
+      font-size: 24px;
+    }
+
+    .page-description {
+      font-size: 14px;
+    }
+  }
+}

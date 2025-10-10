@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API测试工具</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { border: 1px solid #ccc; padding: 20px; border-radius: 5px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, button, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        #response { background-color: #f5f5f5; padding: 10px; min-height: 200px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
+        .endpoint-tab { display: flex; margin-bottom: 15px; }
+        .tab-button { padding: 10px; border: 1px solid #ccc; cursor: pointer; }
+        .tab-button.active { background-color: #4CAF50; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <h1>AI服务API测试工具</h1>
+    <div class="container">
+        
+        <div class="endpoint-tab">
+            <button class="tab-button active" onclick="openTab(event, 'simpleChat')">简单对话</button>
+            <button class="tab-button" onclick="openTab(event, 'streamChat')">流式对话</button>
+        </div>
+        
+        <!-- 简单对话Tab -->
+        <div id="simpleChat" class="tab-content active">
+            <div class="form-group">
+                <label for="message">消息内容</label>
+                <textarea id="message" rows="3">你好，我是测试用户</textarea>
+            </div>
+            <div class="form-group">
+                <label for="modelType">模型类型</label>
+                <select id="modelType">
+                    <option value="deepseek-ai/DeepSeek-V3">DeepSeek-V3</option>
+                    <option value="gpt-4">GPT-4</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="userId">用户ID</label>
+                <input type="text" id="userId" value="test-user-001">
+            </div>
+            <button onclick="testSimpleChat()">发送请求</button>
+        </div>
+        
+        <!-- 流式对话Tab -->
+        <div id="streamChat" class="tab-content">
+            <div class="form-group">
+                <label for="streamMessage">消息内容</label>
+                <input type="text" id="streamMessage" value="你好，这是一个流式请求">
+            </div>
+            <div class="form-group">
+                <label for="streamModelType">模型类型</label>
+                <select id="streamModelType">
+                    <option value="deepseek-ai/DeepSeek-V3">DeepSeek-V3</option>
+                    <option value="gpt-4">GPT-4</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="streamUserId">用户ID</label>
+                <input type="text" id="streamUserId" value="test-user-001">
+            </div>
+            <div class="form-group">
+                <label for="temperature">温度值</label>
+                <input type="number" id="temperature" value="0.7" step="0.1" min="0" max="2">
+            </div>
+            <div class="form-group">
+                <label for="maxTokens">最大Token数</label>
+                <input type="number" id="maxTokens" value="2048" min="1">
+            </div>
+            <button onclick="testStreamChat()">开始流式请求</button>
+            <button onclick="stopStreamChat()" disabled>停止请求</button>
+        </div>
+        
+        <h3>响应结果:</h3>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        
+        function openTab(evt, tabName) {
+            // 隐藏所有tab内容
+            const tabContent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+            
+            // 移除所有tab按钮的active状态
+            const tabLinks = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].classList.remove("active");
+            }
+            
+            // 显示当前tab内容和激活当前tab按钮
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function appendResponse(text) {
+            const responseDiv = document.getElementById("response");
+            responseDiv.textContent += text + "\n";
+            responseDiv.scrollTop = responseDiv.scrollHeight;
+        }
+        
+        function clearResponse() {
+            document.getElementById("response").textContent = "";
+        }
+        
+        function testSimpleChat() {
+            clearResponse();
+            appendResponse("正在发送简单对话请求...");
+            
+            const message = document.getElementById("message").value;
+            const modelType = document.getElementById("modelType").value;
+            const userId = document.getElementById("userId").value;
+            
+            const requestBody = {
+                message: message,
+                modelType: modelType
+            };
+            
+            fetch("http://localhost:3000/api/llm/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-User-Id": userId
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => {
+                appendResponse(`HTTP状态码: ${response.status}`);
+                appendResponse(`响应头: ${JSON.stringify([...response.headers.entries()], null, 2)}`);
+                return response.text();
+            })
+            .then(data => {
+                appendResponse("\n响应体:");
+                try {
+                    appendResponse(JSON.stringify(JSON.parse(data), null, 2));
+                } catch (e) {
+                    appendResponse(data);
+                }
+            })
+            .catch(error => {
+                appendResponse(`请求失败: ${error.message}`);
+            });
+        }
+        
+        function testStreamChat() {
+            clearResponse();
+            appendResponse("开始流式对话请求...\n");
+            
+            const message = document.getElementById("streamMessage").value;
+            const modelType = document.getElementById("streamModelType").value;
+            const userId = document.getElementById("streamUserId").value;
+            const temperature = document.getElementById("temperature").value;
+            const maxTokens = document.getElementById("maxTokens").value;
+            
+            // 构建URL参数
+            const params = new URLSearchParams();
+            params.append('message', message);
+            params.append('modelType', modelType);
+            params.append('temperature', temperature);
+            params.append('maxTokens', maxTokens);
+            params.append('userId', userId);
+            
+            const url = `http://localhost:3000/api/llm/chat/stream?${params.toString()}`;
+            appendResponse(`请求URL: ${url}\n`);
+            
+            // 启用停止按钮，禁用发送按钮
+            document.getElementsByTagName('button')[2].disabled = false;
+            document.getElementsByTagName('button')[1].disabled = true;
+            
+            try {
+                eventSource = new EventSource(url);
+                
+                eventSource.onmessage = function(event) {
+                // 处理标准SSE格式，检查是否以"data: "开头
+                let data = event.data;
+                if (data.startsWith('data: ')) {
+                    data = data.substring(6); // 提取"data: "后面的内容
+                }
+                
+                try {
+                    // 尝试解析为JSON对象
+                    const parsedData = JSON.parse(data);
+                    appendResponse(`\n收到数据: ${JSON.stringify(parsedData, null, 2)}`);
+                } catch (e) {
+                    // 如果解析失败，直接显示原始数据
+                    appendResponse(`\n收到原始数据: ${data}`);
+                }
+            };
+                
+                eventSource.onerror = function(error) {
+                    appendResponse(`\n流式连接错误: ${error.type}`);
+                    stopStreamChat();
+                };
+                
+                eventSource.onopen = function() {
+                    appendResponse("流式连接已建立\n");
+                };
+            } catch (error) {
+                appendResponse(`创建EventSource失败: ${error.message}`);
+                stopStreamChat();
+            }
+        }
+        
+        function stopStreamChat() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+                appendResponse("\n流式连接已关闭");
+            }
+            // 重置按钮状态
+            document.getElementsByTagName('button')[2].disabled = true;
+            document.getElementsByTagName('button')[1].disabled = false;
+        }
+        
+        // 页面加载完成后显示提示信息
+        window.onload = function() {
+            appendResponse("欢迎使用API测试工具！\n");
+            appendResponse("1. 简单对话：测试非流式的AI回复\n");
+            appendResponse("2. 流式对话：测试实时流式AI回复\n");
+            appendResponse("\n提示：根据之前的日志，流式对话端点/api/llm/chat/stream可能可用，建议先测试这个端点。\n");
+        };
+    </script>
+</body>
+</html>

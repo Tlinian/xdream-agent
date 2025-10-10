@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试页面</title>
+</head>
+<body>
+    <h1>前端请求测试</h1>
+    <button onclick="testDirect()">测试直接请求</button>
+    <button onclick="testProxy()">测试代理请求</button>
+    <button onclick="testSSE()">测试SSE</button>
+    <div id="result"></div>
+
+    <script>
+        function log(message) {
+            document.getElementById('result').innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+            console.log(message);
+        }
+
+        async function testDirect() {
+            log('开始测试直接请求...');
+            try {
+                const response = await fetch('http://localhost:3003/direct-test');
+                log('直接请求成功: ' + response.status);
+            } catch (error) {
+                log('直接请求失败: ' + error.message);
+            }
+        }
+
+        async function testProxy() {
+            log('开始测试代理请求...');
+            try {
+                const response = await fetch('/api/llm/chat/stream?message=test&modelType=gpt-4');
+                log('代理请求成功: ' + response.status);
+            } catch (error) {
+                log('代理请求失败: ' + error.message);
+            }
+        }
+
+        function testSSE() {
+            log('开始测试SSE...');
+            try {
+                const eventSource = new EventSource('/api/llm/chat/stream?message=test&modelType=gpt-4');
+                eventSource.onmessage = function(event) {
+                    log('SSE消息: ' + event.data);
+                };
+                eventSource.onerror = function(error) {
+                    log('SSE错误: ' + error);
+                    eventSource.close();
+                };
+                eventSource.onopen = function() {
+                    log('SSE连接成功');
+                };
+            } catch (error) {
+                log('SSE失败: ' + error.message);
+            }
+        }
+
+        // 页面加载完成后自动测试
+        window.onload = function() {
+            log('页面加载完成，等待测试...');
+        };
+    </script>
+</body>
+</html>

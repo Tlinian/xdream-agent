@@ -1,0 +1,25 @@
+rootProject.name = 'xdream-agent-backend'
+
+// 核心服务
+include 'gateway'
+include 'auth-service'
+include 'user-service'
+include 'chat-service'
+include 'knowledge-service'
+include 'task-service'
+include 'subscription-service'
+
+// AI服务
+include 'agent-service'
+include 'llm-service'
+include 'emotion-service'
+include 'multimodal-service'
+include 'tool-service'
+
+// 测试服务
+include 'test-ai-personality'
+
+// 公共模块
+include 'common'
+include 'common-security'
+include 'common-database'

@@ -1,0 +1,553 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.content-understanding-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    color: white;
+
+    .header-content {
+      h1 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      p {
+        font-size: 18px;
+        opacity: 0.9;
+        margin: 0;
+      }
+    }
+  }
+
+  .page-content {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .analysis-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+      .ant-card-head {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        
+        .ant-card-head-title {
+          font-size: 20px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+      }
+
+      .ant-form-item-label > label {
+        font-weight: 500;
+        color: $text-primary;
+      }
+
+      .ant-input,
+      .ant-select-selector,
+      .ant-input-number,
+      .ant-textarea {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        
+        &:hover,
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+        }
+      }
+
+      // 拖拽上传区域样式
+      .ant-upload-drag {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px dashed rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          border-color: $primary-color;
+          background: rgba($primary-color, 0.05);
+        }
+        
+        &.ant-upload-drag-hover {
+          border-color: $primary-color;
+          background: rgba($primary-color, 0.1);
+        }
+        
+        .ant-upload-drag-icon {
+          .anticon {
+            color: $primary-color;
+            font-size: 48px;
+          }
+        }
+        
+        .ant-upload-text {
+          color: $text-primary;
+          font-size: 16px;
+          font-weight: 500;
+        }
+        
+        .ant-upload-hint {
+          color: $text-secondary;
+          font-size: 14px;
+        }
+      }
+
+      // 分析选项样式
+      .ant-row {
+        .ant-col {
+          margin-bottom: 8px;
+          
+          .ant-form-item {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .ant-switch {
+        background: rgba(0, 0, 0, 0.1);
+        
+        &.ant-switch-checked {
+          background: $primary-color;
+        }
+      }
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+
+      .ant-card-head {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        
+        .ant-card-head-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+      }
+
+      .task-info {
+        .task-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+          
+          h4 {
+            margin: 0;
+            font-size: 16px;
+            color: $text-primary;
+            flex: 1;
+            margin-right: 12px;
+          }
+        }
+
+        .task-progress {
+          margin: 16px 0;
+          
+          .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            color: $text-secondary;
+            font-size: 14px;
+          }
+        }
+
+        .task-details {
+          margin: 16px 0;
+          
+          p {
+            margin: 8px 0;
+            color: $text-secondary;
+            font-size: 14px;
+            
+            strong {
+              color: $text-primary;
+              margin-right: 8px;
+            }
+          }
+        }
+
+        .task-result {
+          margin-top: 16px;
+        }
+      }
+
+      .no-task {
+        text-align: center;
+        padding: 40px 0;
+        color: $text-secondary;
+        
+        p {
+          margin: 0;
+          font-size: 16px;
+        }
+      }
+    }
+
+    .template-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+      .ant-card-head {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        
+        .ant-card-head-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+      }
+
+      .template-item {
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        
+        &:hover {
+          background: rgba($primary-color, 0.05);
+          transform: translateY(-1px);
+        }
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        .ant-list-item-meta-title {
+          font-size: 16px;
+          font-weight: 500;
+          color: $text-primary;
+          margin-bottom: 4px;
+        }
+        
+        .ant-list-item-meta-description {
+          color: $text-secondary;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .history-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+      .ant-card-head {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        
+        .ant-card-head-title {
+          font-size: 20px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+      }
+
+      .task-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        
+        span {
+          flex: 1;
+          font-weight: 500;
+          color: $text-primary;
+        }
+      }
+
+      .task-desc {
+        p {
+          margin: 4px 0;
+          color: $text-secondary;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          .anticon {
+            color: $primary-color;
+          }
+        }
+      }
+
+      .ant-list-item {
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.8);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+
+    .ant-tabs {
+      .ant-tabs-nav {
+        margin-bottom: 24px;
+        
+        .ant-tabs-tab {
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 8px 8px 0 0;
+          color: white;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+          
+          &.ant-tabs-tab-active {
+            background: rgba(255, 255, 255, 0.95);
+            color: $primary-color;
+            border-color: rgba(255, 255, 255, 0.95);
+          }
+        }
+        
+        .ant-tabs-ink-bar {
+          background: $primary-color;
+        }
+      }
+      
+      .ant-tabs-content {
+        background: transparent;
+      }
+    }
+  }
+
+  // 结果预览样式
+  .preview-content {
+    .result-content {
+      .ant-descriptions {
+        margin-bottom: 24px;
+        
+        .ant-descriptions-item-label {
+          font-weight: 500;
+          color: $text-primary;
+          background: rgba($primary-color, 0.05);
+        }
+        
+        .ant-descriptions-item-content {
+          color: $text-secondary;
+        }
+      }
+      
+      .result-summary,
+      .result-transcription,
+      .result-keywords,
+      .result-emotions,
+      .result-keyframes {
+        margin-top: 24px;
+        padding: 16px;
+        background: rgba($primary-color, 0.05);
+        border-radius: 8px;
+        
+        h4 {
+          color: $text-primary;
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 12px;
+        }
+        
+        p {
+          color: $text-secondary;
+          line-height: 1.6;
+          margin: 0;
+        }
+        
+        .transcription-content {
+          background: rgba(255, 255, 255, 0.8);
+          padding: 16px;
+          border-radius: 6px;
+          border-left: 4px solid $primary-color;
+          font-family: 'Courier New', monospace;
+          line-height: 1.8;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        
+        .ant-tag {
+          margin: 4px;
+        }
+        
+        img {
+          border-radius: 4px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    padding: 16px;
+    
+    .page-header {
+      .header-content {
+        h1 {
+          font-size: 28px;
+        }
+        
+        p {
+          font-size: 16px;
+        }
+      }
+    }
+    
+    .page-content {
+      .ant-row {
+        .ant-col {
+          span: 24;
+          margin-bottom: 16px;
+        }
+      }
+      
+      .analysis-card {
+        .ant-row {
+          .ant-col {
+            span: 24;
+          }
+        }
+      }
+    }
+  }
+
+  // 暗色主题适配
+  [data-theme='dark'] & {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    
+    .analysis-card,
+    .task-card,
+    .template-card,
+    .history-card {
+      background: rgba(30, 30, 30, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+      
+      .ant-card-head {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .ant-form-item-label > label {
+        color: $text-primary-dark;
+      }
+      
+      .ant-input,
+      .ant-select-selector,
+      .ant-input-number,
+      .ant-textarea {
+        background: rgba(50, 50, 50, 0.8);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: $text-primary-dark;
+        
+        &:hover,
+        &:focus {
+          border-color: $primary-color;
+        }
+      }
+      
+      .ant-upload-drag {
+        background: rgba(50, 50, 50, 0.8);
+        border-color: rgba(255, 255, 255, 0.2);
+        
+        &:hover {
+          background: rgba($primary-color, 0.1);
+        }
+        
+        .ant-upload-text,
+        .ant-upload-hint {
+          color: $text-primary-dark;
+        }
+      }
+      
+      .task-title span,
+      .task-details p strong,
+      .template-item .ant-list-item-meta-title,
+      .ant-card-head-title {
+        color: $text-primary-dark;
+      }
+      
+      .task-desc p,
+      .template-item .ant-list-item-meta-description,
+      .no-task p {
+        color: $text-secondary-dark;
+      }
+      
+      .ant-list-item {
+        background: rgba(50, 50, 50, 0.5);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .result-content {
+        .ant-descriptions {
+          .ant-descriptions-item-label {
+            color: $text-primary-dark;
+            background: rgba($primary-color, 0.1);
+          }
+          
+          .ant-descriptions-item-content {
+            color: $text-secondary-dark;
+          }
+        }
+        
+        .result-summary,
+        .result-transcription,
+        .result-keywords,
+        .result-emotions,
+        .result-keyframes {
+          background: rgba($primary-color, 0.1);
+          
+          h4 {
+            color: $text-primary-dark;
+          }
+          
+          p {
+            color: $text-secondary-dark;
+          }
+          
+          .transcription-content {
+            background: rgba(50, 50, 50, 0.8);
+            color: $text-primary-dark;
+          }
+        }
+      }
+    }
+    
+    .ant-tabs .ant-tabs-nav .ant-tabs-tab {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: $text-primary-dark;
+      
+      &.ant-tabs-tab-active {
+        background: rgba(30, 30, 30, 0.95);
+        color: $primary-color;
+      }
+    }
+  }
+}

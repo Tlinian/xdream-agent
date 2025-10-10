@@ -1,0 +1,181 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /knowledge
+
+spring:
+  application:
+    name: knowledge-service
+  
+  # 数据库配置
+  datasource:
+    url: jdbc:h2:mem:knowledgedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    
+  # PostgreSQL配置（生产环境）
+  # datasource:
+  #   url: jdbc:postgresql://localhost:5432/knowledge_db
+  #   driver-class-name: org.postgresql.Driver
+  #   username: ${DB_USERNAME:knowledge_user}
+  #   password: ${DB_PASSWORD:knowledge_password}
+  
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        # dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 5
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+    
+    # Elasticsearch配置
+    elasticsearch:
+      uris: http://localhost:9200
+      username: ${ES_USERNAME:}
+      password: ${ES_PASSWORD:}
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# Eureka注册中心配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# 日志配置
+logging:
+  level:
+    com.xdream.knowledge: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+  file:
+    name: logs/knowledge-service.log
+
+# 知识库配置
+knowledge:
+  # 文档处理配置
+  document:
+    max-size: 10MB
+    supported-types: txt,pdf,doc,docx,md
+    chunk-size: 1000
+    chunk-overlap: 200
+  
+  # 向量搜索配置
+  vector-search:
+    similarity-threshold: 0.7
+    max-results: 20
+    index-dimension: 1536
+  
+  # 文本提取配置
+  text-extraction:
+    timeout: 30000
+    max-retries: 3
+
+# 限流配置
+rate-limit:
+  enabled: true
+  requests-per-minute: 100
+  requests-per-hour: 1000
+
+# 开发环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  # H2控制台（开发环境）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+# 生产环境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  # 生产环境数据库配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/knowledge_db
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  # 生产环境Redis配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      cluster:
+        nodes:
+          - ${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+
+# 日志级别调整（生产环境）
+logging:
+  level:
+    com.xdream.knowledge: WARN
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

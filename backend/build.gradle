@@ -1,0 +1,105 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.diffplug.spotless' version '6.23.3'
+}
+
+allprojects {
+    group = 'com.xdream'
+    version = '1.0.0-SNAPSHOT'
+    
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'com.diffplug.spotless'
+    
+    java {
+        sourceCompatibility = '17'
+        targetCompatibility = '17'
+    }
+    
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+    
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        
+        // 数据库
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.postgresql:postgresql'
+        
+        // Redis
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        
+        // JWT
+        implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+        
+        // 监控
+        implementation 'io.micrometer:micrometer-registry-prometheus'
+        
+        // 工具
+        implementation 'org.apache.commons:commons-lang3'
+        implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+        annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+        
+        // 测试
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+        testImplementation 'org.testcontainers:junit-jupiter'
+        testImplementation 'org.testcontainers:postgresql'
+        
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+    
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+    
+    // 代码格式化
+    spotless {
+        java {
+            target 'src/**/*.java'
+            googleJavaFormat()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+}
+
+// 根项目配置
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+// 聚合测试任务
+task testAll(type: Test) {
+    description = 'Run all tests'
+    dependsOn subprojects*.test
+}

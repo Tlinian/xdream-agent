@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE连接测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>SSE连接测试</h1>
+    
+    <div class="test-section info">
+        <h3>测试说明</h3>
+        <p>本页面用于测试Server-Sent Events (SSE)连接是否正常工作。</p>
+        <p>测试将直接连接到LLM服务的流式聊天端点。</p>
+    </div>
+
+    <div class="test-section">
+        <h3>测试控制</h3>
+        <button class="btn-primary" onclick="startTest()">开始测试</button>
+        <button class="btn-danger" onclick="stopTest()">停止测试</button>
+        <button onclick="clearOutput()">清空输出</button>
+    </div>
+
+    <div class="test-section">
+        <h3>测试结果</h3>
+        <div id="status">等待测试...</div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let testStartTime = null;
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            output.textContent += logEntry;
+            output.scrollTop = output.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+
+        function updateStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = isError ? 'error' : 'success';
+        }
+
+        function startTest() {
+            if (eventSource) {
+                log('已有正在进行的测试，请先停止当前测试', 'warning');
+                return;
+            }
+
+            clearOutput();
+            testStartTime = Date.now();
+            
+            try {
+                // 构建测试参数
+                const params = new URLSearchParams({
+                    message: '你好，这是一个SSE连接测试',
+                    modelType: 'deepseek-ai/DeepSeek-V3',
+                    temperature: '0.7',
+                    maxTokens: '2048',
+                    userId: 'test-user-001'
+                });
+
+                // 创建EventSource连接 - 使用前端代理
+                const url = `/api/chat/stream?${params.toString()}`;
+                log(`正在连接到: ${url}`);
+                
+                // 使用fetch API实现SSE连接，以支持代理
+                eventSource = {
+                    readyState: 0, // CONNECTING
+                    onopen: null,
+                    onmessage: null,
+                    onerror: null,
+                    close: function() {
+                        this.readyState = 2; // CLOSED
+                        if (this.abortController) {
+                            this.abortController.abort();
+                        }
+                    },
+                    addEventListener: function(eventType, handler) {
+                        // 支持添加事件监听器
+                        this._listeners = this._listeners || {};
+                        this._listeners[eventType] = this._listeners[eventType] || [];
+                        this._listeners[eventType].push(handler);
+                    },
+                    _listeners: {}
+                };
+                
+                const abortController = new AbortController();
+                eventSource.abortController = abortController;
+                
+                fetch(url, {
+                    signal: abortController.signal
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    eventSource.readyState = 1; // OPEN
+                    if (eventSource.onopen) {
+                        eventSource.onopen({ type: 'open' });
+                    }
+                    
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    function readStream() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                eventSource.readyState = 2; // CLOSED
+                                return;
+                            }
+                            
+                            const chunk = decoder.decode(value, { stream: true });
+                            const lines = chunk.split('\n');
+                            
+                            for (const line of lines) {
+                                if (line.startsWith('data: ')) {
+                                    try {
+                                        const data = JSON.parse(line.substring(6));
+                                        if (eventSource.onmessage) {
+                                            eventSource.onmessage({ data: JSON.stringify(data) });
+                                        }
+                                    } catch (e) {
+                                        console.error('Failed to parse SSE data:', e);
+                                    }
+                                }
+                            }
+                            
+                            return readStream();
+                        });
+                    }
+                    
+                    return readStream();
+                }).catch(error => {
+                    eventSource.readyState = 2; // CLOSED
+                    if (eventSource.onerror) {
+                        eventSource.onerror({ type: 'error', error: error });
+                    }
+                });
+                
+                eventSource.onopen = function(event) {
+                    log('SSE连接已建立', 'success');
+                    updateStatus('连接已建立，等待响应...');
+                };
+
+                eventSource.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`收到消息: ${JSON.stringify(data, null, 2)}`, 'success');
+                        
+                        // 触发所有消息事件监听器
+                        if (this._listeners && this._listeners.message) {
+                            this._listeners.message.forEach(handler => {
+                                try {
+                                    handler(event);
+                                } catch (e) {
+                                    console.error('执行message事件监听器失败:', e);
+                                }
+                            });
+                        }
+                        
+                        if (data.finished) {
+                            const duration = Date.now() - testStartTime;
+                            log(`测试完成！总耗时: ${duration}ms`, 'success');
+                            updateStatus(`测试完成！总耗时: ${duration}ms`);
+                            stopTest();
+                        }
+                    } catch (error) {
+                        log(`解析消息失败: ${error.message}`, 'error');
+                        
+                        // 触发所有错误事件监听器
+                        if (this._listeners && this._listeners.error) {
+                            this._listeners.error.forEach(handler => {
+                                try {
+                                    handler(event);
+                                } catch (e) {
+                                    console.error('执行error事件监听器失败:', e);
+                                }
+                            });
+                        }
+                    }
+                };
+
+                eventSource.onerror = function(error) {
+                    log(`SSE连接错误: ${error.type || '未知错误'}`, 'error');
+                    updateStatus('连接错误，请查看详细日志', true);
+                    
+                    if (eventSource.readyState === EventSource.CLOSED) {
+                        log('连接已关闭', 'info');
+                    }
+                    
+                    stopTest();
+                };
+
+                // 设置超时
+                setTimeout(() => {
+                    if (eventSource && eventSource.readyState === EventSource.OPEN) {
+                        log('测试超时（30秒）', 'warning');
+                        updateStatus('测试超时', true);
+                        stopTest();
+                    }
+                }, 30000);
+
+                updateStatus('正在连接...');
+                
+            } catch (error) {
+                log(`创建SSE连接失败: ${error.message}`, 'error');
+                updateStatus(`创建连接失败: ${error.message}`, true);
+                stopTest();
+            }
+        }
+
+        function stopTest() {
+            if (eventSource) {
+                log('正在关闭SSE连接...', 'info');
+                eventSource.close();
+                eventSource = null;
+                log('SSE连接已关闭', 'info');
+            }
+        }
+
+        function clearOutput() {
+            document.getElementById('output').textContent = '';
+            updateStatus('等待测试...');
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            log('SSE测试页面已加载');
+            log('LLM服务端点: /api/chat/stream (通过前端代理)');
+            log('请确保LLM服务和前端开发服务器正在运行，然后点击"开始测试"按钮');
+        });
+    </script>
+</body>
+</html>

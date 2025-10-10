@@ -1,0 +1,253 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.image-generation-page {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    color: white;
+
+    .title-icon {
+      margin-right: 12px;
+      color: #ffd700;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    .ant-typography {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+  }
+
+  .generation-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    .ant-card-head {
+      border-bottom: 2px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    .ant-form-item-label > label {
+      font-weight: 500;
+      color: #34495e;
+    }
+
+    .prompt-templates {
+      margin-bottom: 16px;
+      
+      .ant-tag {
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+
+    .ant-divider {
+      border-top: 2px solid #e8e8e8;
+      
+      .ant-divider-inner-text {
+        font-weight: 500;
+        color: #7f8c8d;
+        font-size: 14px;
+      }
+    }
+
+    .ant-slider {
+      margin: 8px 0;
+      
+      .ant-slider-track {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+      
+      .ant-slider-handle {
+        border-color: #667eea;
+        
+        &:hover {
+          border-color: #764ba2;
+        }
+      }
+    }
+
+    .ant-switch {
+      &.ant-switch-checked {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+    }
+  }
+
+  .results-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+
+    .ant-card-head {
+      border-bottom: 2px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    .empty-results {
+      text-align: center;
+      padding: 48px 24px;
+      
+      .anticon {
+        margin-bottom: 16px;
+      }
+    }
+
+    .generated-images {
+      .task-info {
+        margin-bottom: 16px;
+        text-align: center;
+      }
+
+      .image-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .generated-image {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          display: block;
+        }
+
+        .image-actions {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        &:hover .image-actions {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .history-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    .ant-card-head {
+      border-bottom: 2px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+    }
+
+    .history-list {
+      text-align: center;
+      padding: 24px;
+      color: #7f8c8d;
+    }
+  }
+
+  // 响应式设计
+  @include mobile {
+    padding: 16px;
+
+    .page-header {
+      margin-bottom: 24px;
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .ant-typography {
+        font-size: 14px;
+      }
+    }
+
+    .generation-card,
+    .results-card,
+    .history-card {
+      margin-bottom: 16px;
+    }
+
+    .ant-card-head-title {
+      font-size: 16px !important;
+    }
+  }
+
+  @include tablet {
+    .page-header {
+      h1 {
+        font-size: 28px;
+      }
+    }
+  }
+
+  // 暗色主题适配
+  .dark & {
+    .generation-card,
+    .results-card,
+    .history-card {
+      background: rgba(30, 30, 30, 0.95);
+      
+      .ant-card-head {
+        border-bottom-color: #434343;
+        
+        .ant-card-head-title {
+          color: #e8e8e8;
+        }
+      }
+
+      .ant-form-item-label > label {
+        color: #d9d9d9;
+      }
+
+      .ant-divider {
+        border-top-color: #434343;
+        
+        .ant-divider-inner-text {
+          color: #a6a6a6;
+        }
+      }
+    }
+  }
+}

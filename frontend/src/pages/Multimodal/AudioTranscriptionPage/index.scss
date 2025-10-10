@@ -1,0 +1,224 @@
+.audio-transcription-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 24px;
+    text-align: center;
+
+    .header-content {
+      h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+        color: #1890ff;
+      }
+
+      p {
+        font-size: 16px;
+        color: #666;
+      }
+    }
+  }
+
+  .page-content {
+    .transcription-card {
+      .ant-upload-drag-icon {
+        margin-bottom: 16px;
+        
+        .anticon {
+          font-size: 48px;
+          color: #1890ff;
+        }
+      }
+
+      .ant-upload-text {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .ant-upload-hint {
+        color: #999;
+      }
+    }
+
+    .task-card {
+      .task-info {
+        .task-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+
+          h4 {
+            margin: 0;
+            font-size: 16px;
+          }
+        }
+
+        .task-progress {
+          margin-bottom: 16px;
+
+          .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            color: #666;
+          }
+        }
+
+        .task-details {
+          margin-bottom: 16px;
+
+          p {
+            margin: 4px 0;
+            font-size: 14px;
+
+            strong {
+              color: #333;
+            }
+          }
+        }
+
+        .task-result {
+          .ant-btn {
+            width: 100%;
+          }
+        }
+      }
+
+      .no-task {
+        text-align: center;
+        padding: 24px 0;
+        color: #999;
+      }
+    }
+
+    .template-card {
+      margin-top: 16px;
+
+      .template-item {
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        .ant-list-item-meta {
+          .ant-list-item-meta-title {
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .ant-list-item-meta-description {
+            font-size: 12px;
+            color: #666;
+          }
+        }
+      }
+    }
+
+    .history-card {
+      .task-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+          font-weight: 500;
+        }
+      }
+
+      .task-desc {
+        p {
+          margin: 4px 0;
+          font-size: 14px;
+          color: #666;
+
+          .anticon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  .preview-content {
+    .transcription-result {
+      .result-summary {
+        margin-bottom: 24px;
+        padding: 16px;
+        background-color: #f0f8ff;
+        border-radius: 6px;
+
+        h4 {
+          margin-bottom: 12px;
+          color: #1890ff;
+        }
+
+        p {
+          margin-bottom: 12px;
+          line-height: 1.6;
+        }
+
+        .result-stats {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+      }
+
+      .result-text {
+        margin-bottom: 24px;
+
+        h4 {
+          margin-bottom: 12px;
+          color: #1890ff;
+        }
+
+        .transcription-text {
+          font-family: 'Courier New', monospace;
+          font-size: 14px;
+          line-height: 1.6;
+          background-color: #fafafa;
+          border: 1px solid #d9d9d9;
+        }
+      }
+
+      .result-segments {
+        h4 {
+          margin-bottom: 12px;
+          color: #1890ff;
+        }
+
+        .segment-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 12px;
+          border: 1px solid #f0f0f0;
+          border-radius: 6px;
+          margin-bottom: 8px;
+
+          .segment-time {
+            min-width: 120px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+          }
+
+          .segment-text {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.5;
+          }
+
+          .segment-confidence {
+            min-width: 60px;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}

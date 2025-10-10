@@ -1,0 +1,63 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+dependencies {
+    implementation project(':common')
+    
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    // Spring Cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // 图像处理
+    implementation 'net.coobird:thumbnailator:0.4.20'
+    
+    // 视频处理
+    implementation 'org.bytedeco:javacv-platform:1.5.9'
+    
+    // 音频处理
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    
+    // HTTP客户端
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    
+    // JSON处理
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    
+    // Configuration Processor
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    
+    // Test Dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.0"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

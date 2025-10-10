@@ -1,0 +1,95 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.app-header {
+  background: #fff;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .trigger {
+      font-size: 18px;
+      line-height: 64px;
+      padding: 0 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      
+      .logo-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: $primary-color;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+
+    .header-icon {
+      color: $text-color-secondary;
+      font-size: 16px;
+      padding: 4px 8px;
+
+      &:hover {
+        color: $primary-color;
+        background-color: rgba(24, 144, 255, 0.1);
+      }
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(24, 144, 255, 0.1);
+      }
+
+      .user-name {
+        font-size: 14px;
+        color: $text-color;
+      }
+    }
+  }
+
+  @include mobile {
+    padding: 0 16px;
+
+    .header-left {
+      .trigger {
+        padding: 0 16px;
+      }
+    }
+
+    .header-right {
+      .user-info .user-name {
+        display: none;
+      }
+    }
+  }
+}

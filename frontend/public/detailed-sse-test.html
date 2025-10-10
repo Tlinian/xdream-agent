@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE详细测试 - 查看当前时间</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1890ff;
+            margin-bottom: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #40a9ff;
+        }
+        .log-area {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-top: 20px;
+        }
+        .response-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+        }
+        .thinking-process {
+            background-color: #fff7e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .final-answer {
+            background-color: #f6ffed;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+        .log-entry.info {
+            color: #666;
+        }
+        .log-entry.data {
+            color: #2c5c00;
+        }
+        .log-entry.error {
+            color: #d03050;
+        }
+        .log-entry.debug {
+            color: #1890ff;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSE详细测试 - 查看当前时间</h1>
+        
+        <div class="controls">
+            <label for="useReAct">
+                <input type="checkbox" id="useReAct" checked> 使用ReAct模式
+            </label>
+            <button id="sendRequest">发送"查看当前时间"请求</button>
+            <button id="clearLogs">清空日志</button>
+        </div>
+        
+        <div id="responseArea" class="response-area">
+            <h3>响应结果</h3>
+            <div id="thinkingProcess" class="thinking-process" style="display: none;">
+                <strong>思考过程:</strong>
+                <pre id="thinkingContent"></pre>
+            </div>
+            <div id="finalAnswer" class="final-answer" style="display: none;">
+                <strong>最终答案:</strong>
+                <div id="answerContent"></div>
+            </div>
+        </div>
+        
+        <h3>详细日志</h3>
+        <div id="logArea" class="log-area"></div>
+    </div>
+
+    <script>
+        const sendButton = document.getElementById('sendRequest');
+        const clearButton = document.getElementById('clearLogs');
+        const useReActCheckbox = document.getElementById('useReAct');
+        const logArea = document.getElementById('logArea');
+        const thinkingProcess = document.getElementById('thinkingProcess');
+        const thinkingContent = document.getElementById('thinkingContent');
+        const finalAnswer = document.getElementById('finalAnswer');
+        const answerContent = document.getElementById('answerContent');
+        let eventSource = null;
+        let isThinking = false;
+        let currentThinking = '';
+        let currentAnswer = '';
+        
+        // 日志记录函数
+        function log(message, type = 'info') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `${new Date().toLocaleTimeString()} [${type.toUpperCase()}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        // 发送请求
+        sendButton.addEventListener('click', () => {
+            if (eventSource) {
+                eventSource.close();
+                log('关闭之前的连接');
+            }
+            
+            // 重置状态
+            thinkingProcess.style.display = 'none';
+            finalAnswer.style.display = 'none';
+            thinkingContent.textContent = '';
+            answerContent.textContent = '';
+            isThinking = false;
+            currentThinking = '';
+            currentAnswer = '';
+            
+            const useReAct = useReActCheckbox.checked;
+            const message = '查看当前时间';
+            
+            // 构建请求URL
+            const params = new URLSearchParams({
+                message: message,
+                modelType: 'deepseek-ai/DeepSeek-V3',
+                temperature: '0.7',
+                maxTokens: '2048',
+                userId: 'test-user-001',
+                useReAct: useReAct ? 'true' : 'false'
+            });
+            
+            const url = `http://localhost:3000/api/llm/chat/stream?${params.toString()}`;
+            log(`发送请求: ${url}`);
+            
+            try {
+                // 创建SSE连接
+                eventSource = new EventSource(url, {
+                    withCredentials: true
+                });
+                
+                eventSource.onopen = (event) => {
+                    log(`连接已建立: ${event.type}`, 'info');
+                    log(`连接状态: CONNECTED`, 'info');
+                };
+                
+                eventSource.onmessage = (event) => {
+                    log(`收到消息事件: ${event.type}`, 'info');
+                    log(`原始数据: ${event.data}`, 'data');
+                    
+                    try {
+                        // 尝试解析JSON
+                        const data = JSON.parse(event.data);
+                        log(`解析后的数据: ${JSON.stringify(data, null, 2)}`, 'debug');
+                        
+                        // 处理响应数据
+                        processResponse(data);
+                    } catch (error) {
+                        log(`解析数据失败: ${error.message}`, 'error');
+                        log(`错误数据: ${event.data}`, 'error');
+                    }
+                };
+                
+                eventSource.onerror = (error) => {
+                    log(`连接错误: ${error.type}`, 'error');
+                    if (eventSource.readyState === 2) {
+                        log('连接已关闭', 'info');
+                    }
+                    eventSource.close();
+                };
+                
+            } catch (error) {
+                log(`创建SSE连接失败: ${error.message}`, 'error');
+            }
+        });
+        
+        // 处理响应数据
+        function processResponse(data) {
+            // 检查完成标记
+            if (data.finished) {
+                log('响应完成', 'info');
+                if (eventSource) {
+                    eventSource.close();
+                }
+                return;
+            }
+            
+            // 获取内容
+            const content = data.content || '';
+            log(`处理内容: ${content.substring(0, 100)}${content.length > 100 ? '...' : ''}`, 'debug');
+            
+            // 检查特殊标记
+            if (content === '[THINKING_START]') {
+                log('开始思考阶段', 'info');
+                isThinking = true;
+                thinkingProcess.style.display = 'block';
+                return;
+            }
+            
+            if (content === '[THINKING_END]') {
+                log('结束思考阶段', 'info');
+                isThinking = false;
+                return;
+            }
+            
+            if (content === '[ANSWER_START]') {
+                log('开始回答阶段', 'info');
+                finalAnswer.style.display = 'block';
+                return;
+            }
+            
+            // 处理内容
+            if (isThinking) {
+                currentThinking += content;
+                thinkingContent.textContent = currentThinking;
+            } else {
+                currentAnswer += content;
+                answerContent.textContent = currentAnswer;
+            }
+        }
+        
+        // 清空日志
+        clearButton.addEventListener('click', () => {
+            logArea.innerHTML = '';
+        });
+        
+        // 页面卸载时关闭连接
+        window.addEventListener('beforeunload', () => {
+            if (eventSource) {
+                eventSource.close();
+            }
+        });
+    </script>
+</body>
+</html>

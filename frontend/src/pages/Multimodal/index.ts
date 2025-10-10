@@ -1,0 +1,12 @@
+// 多模态服务页面导出
+export { default as MultimodalPage } from '../MultimodalPage'
+export { default as ImageGenerationPage } from './ImageGenerationPage'
+export { default as ImageEnhancementPage } from './ImageEnhancementPage'
+export { default as VideoGenerationPage } from './VideoGenerationPage'
+export { default as VideoAnalysisPage } from './VideoAnalysisPage'
+export { default as AudioGenerationPage } from './AudioGenerationPage'
+export { default as AudioAnalysisPage } from './AudioAnalysisPage'
+export { default as AudioTranscriptionPage } from './AudioTranscriptionPage'
+export { default as TextToSpeechPage } from './TextToSpeechPage'
+export { default as MultimodalFusionPage } from './MultimodalFusionPage'
+export { default as ContentUnderstandingPage } from './ContentUnderstandingPage'

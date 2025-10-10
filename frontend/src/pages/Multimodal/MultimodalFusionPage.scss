@@ -1,0 +1,214 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.multimodal-fusion-page {
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    color: white;
+
+    .ant-typography {
+      color: white;
+    }
+  }
+
+  .fusion-content {
+    .input-panel {
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+      .fusion-mode-section {
+        margin-bottom: 24px;
+      }
+
+      .input-section {
+        margin-bottom: 24px;
+
+        .ant-typography {
+          margin-bottom: 12px;
+        }
+
+        .ant-upload {
+          margin-bottom: 16px;
+        }
+
+        .file-list {
+          margin-top: 16px;
+
+          .file-item {
+            margin-bottom: 8px;
+
+            .file-info {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+          }
+        }
+      }
+
+      .action-buttons {
+        text-align: center;
+        margin-top: 32px;
+
+        .ant-btn {
+          margin: 0 8px;
+        }
+      }
+    }
+
+    .result-panel {
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+
+        .empty-icon {
+          margin-bottom: 24px;
+        }
+      }
+
+      .fusion-result {
+        .result-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .result-section {
+          margin-bottom: 24px;
+
+          .ant-typography {
+            margin-bottom: 12px;
+          }
+
+          .analysis-details {
+            .analysis-item {
+              margin-bottom: 16px;
+              padding: 12px;
+              background: #f8f9fa;
+              border-radius: 8px;
+
+              .ant-tag {
+                margin-bottom: 8px;
+              }
+
+              .ant-typography {
+                margin: 0;
+              }
+            }
+          }
+
+          .recommendations-list {
+            margin: 0;
+            padding-left: 20px;
+
+            li {
+              margin-bottom: 8px;
+              color: #666;
+              line-height: 1.6;
+            }
+          }
+        }
+
+        .result-actions {
+          margin-top: 24px;
+          padding-top: 16px;
+          border-top: 1px solid #f0f0f0;
+        }
+      }
+    }
+
+    .help-panel {
+      margin-top: 24px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+
+      .help-list {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+          margin-bottom: 8px;
+          color: #666;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+
+  // 暗色主题适配
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+
+    .input-panel,
+    .result-panel,
+    .help-panel {
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+
+      .ant-typography {
+        color: #fff;
+      }
+
+      .ant-card-head-title {
+        color: #fff;
+      }
+
+      .help-list li {
+        color: #ccc;
+      }
+
+      .analysis-details .analysis-item {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .result-header {
+        border-bottom-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .result-actions {
+        border-top-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  @include respond-to('mobile') {
+    padding: 16px;
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .input-panel,
+    .result-panel {
+      margin-bottom: 16px;
+    }
+
+    .result-header {
+      flex-direction: column;
+      align-items: flex-start !important;
+
+      .ant-tag {
+        margin-top: 8px;
+        margin-left: 0 !important;
+      }
+    }
+  }
+
+  @include respond-to('tablet') {
+    .input-panel {
+      margin-bottom: 24px;
+    }
+  }
+}

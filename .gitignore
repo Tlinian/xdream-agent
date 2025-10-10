@@ -1,0 +1,68 @@
+# 项目根目录通用忽略规则
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# 编辑器配置
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# 日志文件
+*.log
+*.log.*
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# 构建和打包目录
+build/
+dist/
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+./frontend/node_modules
+./frontend/dist
+./backend/.idea
+./backend/build
+./backend/agent-service/build
+./backend/auth-service/build
+./backend/chat-service/build
+./backend/common/build
+./backend/common-database/build
+./backend/common-security/build
+./backend/emotion-service/build
+./backend/file-service/build
+./backend/knowledge-service/build
+./backend/llm-service/build
+./backend/multimodal-service/build
+./backend/subscription-service/build
+
+
+# 独立的git子仓库
+
+# 保留其他子目录的.gitignore
+!*/.gitignore

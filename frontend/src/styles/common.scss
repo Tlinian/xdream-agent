@@ -1,0 +1,188 @@
+// 通用样式类
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// Flex 工具类
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+.flex-column {
+  @include flex-column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+// 间距工具类
+.m-0 { margin: 0; }
+.m-4 { margin: 4px; }
+.m-8 { margin: 8px; }
+.m-12 { margin: 12px; }
+.m-16 { margin: 16px; }
+.m-24 { margin: 24px; }
+
+.mt-0 { margin-top: 0; }
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-4 { margin-bottom: 4px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+
+.ml-0 { margin-left: 0; }
+.ml-4 { margin-left: 4px; }
+.ml-8 { margin-left: 8px; }
+.ml-12 { margin-left: 12px; }
+.ml-16 { margin-left: 16px; }
+.ml-24 { margin-left: 24px; }
+
+.mr-0 { margin-right: 0; }
+.mr-4 { margin-right: 4px; }
+.mr-8 { margin-right: 8px; }
+.mr-12 { margin-right: 12px; }
+.mr-16 { margin-right: 16px; }
+.mr-24 { margin-right: 24px; }
+
+.p-0 { padding: 0; }
+.p-4 { padding: 4px; }
+.p-8 { padding: 8px; }
+.p-12 { padding: 12px; }
+.p-16 { padding: 16px; }
+.p-24 { padding: 24px; }
+
+.pt-0 { padding-top: 0; }
+.pt-4 { padding-top: 4px; }
+.pt-8 { padding-top: 8px; }
+.pt-12 { padding-top: 12px; }
+.pt-16 { padding-top: 16px; }
+.pt-24 { padding-top: 24px; }
+
+.pb-0 { padding-bottom: 0; }
+.pb-4 { padding-bottom: 4px; }
+.pb-8 { padding-bottom: 8px; }
+.pb-12 { padding-bottom: 12px; }
+.pb-16 { padding-bottom: 16px; }
+.pb-24 { padding-bottom: 24px; }
+
+.pl-0 { padding-left: 0; }
+.pl-4 { padding-left: 4px; }
+.pl-8 { padding-left: 8px; }
+.pl-12 { padding-left: 12px; }
+.pl-16 { padding-left: 16px; }
+.pl-24 { padding-left: 24px; }
+
+.pr-0 { padding-right: 0; }
+.pr-4 { padding-right: 4px; }
+.pr-8 { padding-right: 8px; }
+.pr-12 { padding-right: 12px; }
+.pr-16 { padding-right: 16px; }
+.pr-24 { padding-right: 24px; }
+
+// 显示工具类
+.hidden {
+  display: none;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+// 定位工具类
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+// 卡片样式
+.card {
+  background: #fff;
+  border-radius: $border-radius-base;
+  @include card-shadow;
+  
+  .card-header {
+    padding: $padding-md;
+    border-bottom: 1px solid $border-color-split;
+    font-weight: 500;
+  }
+  
+  .card-body {
+    padding: $padding-md;
+  }
+  
+  .card-footer {
+    padding: $padding-md;
+    border-top: 1px solid $border-color-split;
+    background-color: $bg-color-light;
+  }
+}
+
+// 按钮组
+.btn-group {
+  display: inline-flex;
+  gap: 8px;
+  
+  &.btn-group-vertical {
+    flex-direction: column;
+  }
+}
+
+// 响应式工具类
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    display: none !important;
+  }
+}

@@ -1,0 +1,51 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  
+  .ant-result {
+    padding: 48px 32px;
+    
+    .ant-result-title {
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+    }
+    
+    .ant-result-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    .ant-result-extra {
+      margin-top: 32px;
+      
+      .ant-btn {
+        min-width: 120px;
+        height: 40px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// 暗色主题适配
+[data-theme='dark'] {
+  .not-found-page {
+    background: var(--bg-primary);
+    
+    .ant-result {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+  }
+}

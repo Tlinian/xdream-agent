@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE连接测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #eee;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            margin-right: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSE连接测试工具</h1>
+        <div class="controls">
+            <div>
+                <label for="message">输入消息：</label>
+                <input type="text" id="message" value="你好" style="width: 300px;">
+            </div>
+            <div>
+                <label for="modelType">模型类型：</label>
+                <input type="text" id="modelType" value="deepseek-ai/DeepSeek-V3" style="width: 300px;">
+            </div>
+            <button id="startBtn" onclick="startTest()">开始测试</button>
+            <button id="stopBtn" onclick="stopTest()" disabled>停止测试</button>
+            <button onclick="clearOutput()">清空输出</button>
+        </div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let abortController = null;
+        let heartbeatInterval = null;
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toISOString();
+            const logLine = `[${timestamp}] [${type.toUpperCase()}] ${message}\n`;
+            output.innerHTML += logLine;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+        
+        function startTest() {
+            const message = document.getElementById('message').value;
+            const modelType = document.getElementById('modelType').value;
+            
+            if (eventSource) {
+                stopTest();
+            }
+            
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            log('开始测试SSE连接...');
+            
+            // 构建URL参数
+            const params = new URLSearchParams({
+                message: message,
+                modelType: modelType,
+                temperature: '0.7',
+                maxTokens: '2048',
+                userId: 'test-user-001'
+            });
+            
+            const url = `/api/llm/chat/stream?${params.toString()}`;
+            log(`请求URL: ${url}`);
+            
+            abortController = new AbortController();
+            const signal = abortController.signal;
+            
+            try {
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/event-stream',
+                        'Cache-Control': 'no-cache',
+                        'X-User-Id': 'test-user-001'
+                    },
+                    signal: signal,
+                    credentials: 'include'
+                }).then(response => {
+                    log(`响应状态码: ${response.status}`);
+                    log(`响应头 Content-Type: ${response.headers.get('Content-Type')}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误! 状态码: ${response.status}`);
+                    }
+                    
+                    if (!response.body) {
+                        throw new Error('响应体为空');
+                    }
+                    
+                    log('开始读取SSE流...');
+                    
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+                    
+                    function readStream() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                log('SSE流已结束');
+                                stopTest();
+                                return;
+                            }
+                            
+                            // 解码新数据并添加到缓冲区
+                            buffer += decoder.decode(value, { stream: true });
+                            
+                            // 按行分割数据
+                            let lines = buffer.split('\n');
+                            
+                            // 最后一行可能不完整，保留在缓冲区
+                            buffer = lines.pop() || '';
+                            
+                            // 处理每一行
+                            for (const line of lines) {
+                                if (line.trim() === '') continue;
+                                
+                                log(`原始数据行: ${line}`);
+                                
+                                if (line.startsWith('data: ')) {
+                                    try {
+                                        const dataStr = line.substring(6);
+                                        
+                                        // 检查是否是结束标记
+                                        if (dataStr === '[DONE]') {
+                                            log('收到结束标记');
+                                            continue;
+                                        }
+                                        
+                                        // 尝试解析JSON
+                                        const data = JSON.parse(dataStr);
+                                        log(`解析成功: ${JSON.stringify(data)}`, 'success');
+                                    } catch (e) {
+                                        log(`解析失败: ${e.message}`, 'error');
+                                    }
+                                }
+                            }
+                            
+                            return readStream();
+                        }).catch(error => {
+                            log(`读取流错误: ${error.message}`, 'error');
+                            stopTest();
+                        });
+                    }
+                    
+                    // 开始读取流
+                    return readStream();
+                }).catch(error => {
+                    log(`连接失败: ${error.message}`, 'error');
+                    stopTest();
+                });
+                
+                // 定期发送心跳日志
+                heartbeatInterval = setInterval(() => {
+                    log('心跳检测: 连接仍然活跃');
+                }, 10000);
+                
+            } catch (error) {
+                log(`发生异常: ${error.message}`, 'error');
+                stopTest();
+            }
+        }
+        
+        function stopTest() {
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+            }
+            
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
+            
+            eventSource = null;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            log('测试已停止');
+        }
+        
+        // 页面卸载时清理资源
+        window.addEventListener('beforeunload', () => {
+            stopTest();
+        });
+    </script>
+</body>
+</html>

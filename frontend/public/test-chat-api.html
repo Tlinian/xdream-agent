@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试Chat API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        input, button, textarea { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        #result { margin-top: 20px; padding: 10px; background-color: #f1f1f1; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试Chat API</h1>
+        
+        <div>
+            <label for="message">消息内容:</label>
+            <input type="text" id="message" value="你是" placeholder="输入消息...">
+        </div>
+        
+        <div>
+            <label for="modelType">模型类型:</label>
+            <input type="text" id="modelType" value="deepseek-ai/DeepSeek-V3" placeholder="模型类型...">
+        </div>
+        
+        <div>
+            <label for="temperature">温度:</label>
+            <input type="number" id="temperature" value="0.7" step="0.1" min="0" max="2">
+        </div>
+        
+        <div>
+            <label for="maxTokens">最大Tokens:</label>
+            <input type="number" id="maxTokens" value="256" min="1">
+        </div>
+        
+        <button onclick="testChatAPI()">发送请求</button>
+        
+        <div>
+            <h3>响应结果:</h3>
+            <pre id="result"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function testChatAPI() {
+            const message = document.getElementById('message').value;
+            const modelType = document.getElementById('modelType').value;
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const maxTokens = parseInt(document.getElementById('maxTokens').value);
+            
+            const requestData = {
+                message,
+                modelType,
+                temperature,
+                maxTokens
+            };
+            
+            try {
+                document.getElementById('result').innerText = '发送请求中...';
+                
+                const response = await fetch('http://localhost:8085/api/test/chat/simple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态码: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                document.getElementById('result').innerText = `请求失败: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

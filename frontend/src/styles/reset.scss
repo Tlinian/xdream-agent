@@ -1,0 +1,104 @@
+// 现代CSS重置
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+// 列表样式重置
+ul,
+ol {
+  list-style: none;
+}
+
+// 链接样式重置
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// 按钮样式重置
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// 表单元素重置
+input,
+textarea,
+select {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+// 表格重置
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// 引用重置
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}

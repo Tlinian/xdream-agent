@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #eee;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSE流式接口测试</h1>
+        <div>
+            <label for="message">输入消息：</label>
+            <input type="text" id="message" value="你好" style="width: 300px;">
+            <button onclick="testStream()">测试流式连接</button>
+        </div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        
+        function testStream() {
+            const message = document.getElementById('message').value;
+            const output = document.getElementById('output');
+            output.innerHTML = '开始连接...\n';
+            
+            // 构建URL参数
+            const params = new URLSearchParams({
+                message: message,
+                modelType: 'deepseek-ai/DeepSeek-V2.5',
+                temperature: '0.7',
+                maxTokens: '2048',
+                userId: 'test-user-001'
+            });
+            
+            const url = `/api/llm/chat/stream?${params.toString()}`;
+            
+            // 关闭之前的连接
+            if (eventSource) {
+                eventSource.close();
+            }
+            
+            try {
+                // 使用fetch API实现SSE连接
+                const abortController = new AbortController();
+                const signal = abortController.signal;
+                
+                output.innerHTML += `连接URL: ${url}\n\n`;
+                
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-User-Id': 'test-user-001',
+                        'Accept': 'text/event-stream'
+                    },
+                    signal: signal
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误! 状态码: ${response.status}`);
+                    }
+                    
+                    output.innerHTML += `连接成功，状态码: ${response.status}\n\n`;
+                    
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    function readStream() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                output.innerHTML += '\n\n连接已关闭';
+                                return;
+                            }
+                            
+                            const chunk = decoder.decode(value, { stream: true });
+                            output.innerHTML += `收到数据: ${chunk}\n`;
+                            
+                            // 尝试解析JSON数据
+                            try {
+                                const lines = chunk.split('\n');
+                                for (const line of lines) {
+                                    if (line.startsWith('data: ')) {
+                                        const data = JSON.parse(line.substring(6));
+                                        output.innerHTML += `解析数据: ${JSON.stringify(data, null, 2)}\n`;
+                                    }
+                                }
+                            } catch (e) {
+                                output.innerHTML += `解析错误: ${e.message}\n`;
+                            }
+                            
+                            return readStream();
+                        });
+                    }
+                    
+                    return readStream();
+                }).catch(error => {
+                    output.innerHTML += `连接失败: ${error.message}\n`;
+                });
+                
+                // 5秒后自动终止连接
+                setTimeout(() => {
+                    abortController.abort();
+                    output.innerHTML += '\n\n连接已超时终止';
+                }, 30000);
+                
+            } catch (error) {
+                output.innerHTML += `发生异常: ${error.message}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

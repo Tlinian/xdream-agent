@@ -1,0 +1,318 @@
+@import '@styles/variables.scss';
+@import '@styles/mixins.scss';
+
+.image-enhancement-page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 24px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+
+    .title-icon {
+      margin-right: 12px;
+      font-size: 32px;
+    }
+
+    h1 {
+      margin-bottom: 8px !important;
+      color: white !important;
+    }
+
+    .ant-typography-secondary {
+      color: rgba(255, 255, 255, 0.85) !important;
+      font-size: 16px;
+    }
+  }
+
+  .upload-card {
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    .ant-upload-drag {
+      border-radius: 8px;
+      border: 2px dashed #d9d9d9;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #1890ff;
+        background-color: #f0f5ff;
+      }
+
+      .ant-upload-drag-icon {
+        margin-bottom: 16px;
+        
+        .anticon {
+          font-size: 48px;
+          color: #1890ff;
+        }
+      }
+
+      .ant-upload-text {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .ant-upload-hint {
+        color: #8c8c8c;
+        font-size: 14px;
+      }
+    }
+
+    .uploaded-image-preview {
+      text-align: center;
+      padding: 16px;
+
+      .preview-image {
+        max-width: 100%;
+        max-height: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
+      }
+
+      .image-actions {
+        text-align: center;
+      }
+    }
+  }
+
+  .enhancement-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+
+    .ant-form-item-label > label {
+      font-weight: 500;
+      color: #262626;
+    }
+
+    .ant-slider {
+      margin: 12px 0;
+
+      .ant-slider-mark {
+        font-size: 12px;
+      }
+
+      .ant-slider-dot {
+        border-color: #d9d9d9;
+        
+        &.ant-slider-dot-active {
+          border-color: #1890ff;
+        }
+      }
+    }
+
+    .ant-switch {
+      background-color: #d9d9d9;
+      
+      &.ant-switch-checked {
+        background-color: #1890ff;
+      }
+    }
+  }
+
+  .templates-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+
+    .template-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+
+      &:hover {
+        border-color: #1890ff;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .template-content {
+        padding: 8px 0;
+
+        .template-title {
+          font-weight: 600;
+          font-size: 14px;
+          color: #262626;
+          margin-bottom: 4px;
+        }
+
+        .template-description {
+          font-size: 12px;
+          color: #8c8c8c;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+
+  .results-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+
+    .result-item {
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .result-image {
+        width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 12px;
+      }
+
+      .result-actions {
+        text-align: center;
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .page-header {
+      padding: 16px 0;
+      margin-bottom: 24px;
+
+      .title-icon {
+        font-size: 24px;
+      }
+
+      .ant-typography-secondary {
+        font-size: 14px;
+      }
+    }
+
+    .upload-card,
+    .enhancement-card,
+    .templates-card,
+    .results-card {
+      margin-bottom: 16px;
+    }
+  }
+
+  // 暗色主题适配
+  [data-theme='dark'] & {
+    .page-header {
+      background: linear-gradient(135deg, #4c1d95 0%, #1e3a8a 100%);
+    }
+
+    .upload-card,
+    .enhancement-card,
+    .templates-card,
+    .results-card {
+      background: var(--bg-primary);
+      border-color: var(--border-color);
+
+      .ant-card-head {
+        border-bottom-color: var(--border-color);
+        
+        .ant-card-head-title {
+          color: var(--text-primary);
+        }
+      }
+
+      .ant-form-item-label > label {
+        color: var(--text-primary);
+      }
+
+      .ant-upload-drag {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+
+        &:hover {
+          border-color: #1890ff;
+          background-color: rgba(24, 144, 255, 0.1);
+        }
+      }
+
+      .template-card {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+
+        &:hover {
+          border-color: #1890ff;
+          background: rgba(24, 144, 255, 0.1);
+        }
+
+        .template-title {
+          color: var(--text-primary);
+        }
+
+        .template-description {
+          color: var(--text-secondary);
+        }
+      }
+
+      .result-item {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+      }
+    }
+  }
+}
+
+// 动画效果
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.image-enhancement-page {
+  animation: fadeInUp 0.6s ease-out;
+}

@@ -1,0 +1,66 @@
+package com.xdream.common.exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum ErrorCode {
+
+  // 通用错误
+  SUCCESS("SUCCESS", "操作成功"),
+  ERROR("ERROR", "系统错误"),
+  PARAM_ERROR("PARAM_ERROR", "参数错误"),
+  NOT_FOUND("NOT_FOUND", "资源不存在"),
+  UNAUTHORIZED("UNAUTHORIZED", "未授权"),
+  FORBIDDEN("FORBIDDEN", "无权限"),
+  METHOD_NOT_ALLOWED("METHOD_NOT_ALLOWED", "请求方法不允许"),
+  INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "服务器内部错误"),
+  SERVICE_UNAVAILABLE("SERVICE_UNAVAILABLE", "服务不可用"),
+
+  // 用户相关错误
+  USER_NOT_FOUND("USER_NOT_FOUND", "用户不存在"),
+  USERNAME_EXISTS("USERNAME_EXISTS", "用户名已存在"),
+  EMAIL_EXISTS("EMAIL_EXISTS", "邮箱已存在"),
+  INVALID_CREDENTIALS("INVALID_CREDENTIALS", "用户名或密码错误"),
+  TOKEN_INVALID("TOKEN_INVALID", "Token无效"),
+  TOKEN_EXPIRED("TOKEN_EXPIRED", "Token已过期"),
+
+  // 对话相关错误
+  CHAT_NOT_FOUND("CHAT_NOT_FOUND", "对话不存在"),
+  MESSAGE_NOT_FOUND("MESSAGE_NOT_FOUND", "消息不存在"),
+  AGENT_NOT_FOUND("AGENT_NOT_FOUND", "Agent不存在"),
+
+  // 知识库相关错误
+  KNOWLEDGE_NOT_FOUND("KNOWLEDGE_NOT_FOUND", "知识条目不存在"),
+  KNOWLEDGE_PERMISSION_DENIED("KNOWLEDGE_PERMISSION_DENIED", "无权限访问知识条目"),
+
+  // 任务相关错误
+  TASK_NOT_FOUND("TASK_NOT_FOUND", "任务不存在"),
+  TASK_PERMISSION_DENIED("TASK_PERMISSION_DENIED", "无权限访问任务"),
+
+  // 订阅相关错误
+  SUBSCRIPTION_NOT_FOUND("SUBSCRIPTION_NOT_FOUND", "订阅不存在"),
+  PLAN_NOT_FOUND("PLAN_NOT_FOUND", "订阅计划不存在"),
+  PAYMENT_FAILED("PAYMENT_FAILED", "支付失败"),
+
+  // 文件相关错误
+  FILE_NOT_FOUND("FILE_NOT_FOUND", "文件不存在"),
+  FILE_UPLOAD_FAILED("FILE_UPLOAD_FAILED", "文件上传失败"),
+  FILE_TYPE_NOT_SUPPORTED("FILE_TYPE_NOT_SUPPORTED", "不支持的文件类型"),
+  FILE_SIZE_EXCEEDED("FILE_SIZE_EXCEEDED", "文件大小超出限制"),
+
+  // AI服务相关错误
+  LLM_SERVICE_ERROR("LLM_SERVICE_ERROR", "大语言模型服务错误"),
+  AGENT_EXECUTION_ERROR("AGENT_EXECUTION_ERROR", "Agent执行错误"),
+  TOOL_EXECUTION_ERROR("TOOL_EXECUTION_ERROR", "工具执行错误"),
+  EMOTION_ANALYSIS_ERROR("EMOTION_ANALYSIS_ERROR", "情感分析错误"),
+
+  // 外部服务错误
+  EXTERNAL_SERVICE_ERROR("EXTERNAL_SERVICE_ERROR", "外部服务错误"),
+  RATE_LIMIT_EXCEEDED("RATE_LIMIT_EXCEEDED", "请求频率超限"),
+  NETWORK_ERROR("NETWORK_ERROR", "网络错误");
+
+  private final String code;
+  private final String message;
+}

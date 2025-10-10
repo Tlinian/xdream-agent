@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大模型API测试工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response-container {
+            margin-top: 20px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            min-height: 200px;
+        }
+        #response {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .loading {
+            display: none;
+            font-style: italic;
+            color: #666;
+        }
+        .config-info {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .config-info h3 {
+            margin: 0 0 5px 0;
+            color: #1565C0;
+        }
+        .debug-log {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>大模型API测试工具</h1>
+    
+    <div class="config-info">
+        <h3>当前配置信息</h3>
+        <p>API地址: https://api.siliconflow.cn/v1/chat/completions</p>
+        <p>模型: deepseek-ai/DeepSeek-V3</p>
+        <p>最大Token数: 16384</p>
+    </div>
+    
+    <form id="test-form">
+        <div class="form-group">
+            <label for="message">测试消息:</label>
+            <textarea id="message" name="message" placeholder="请输入您想测试的消息...">你好，我想测试一下大模型API连接是否正常</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="modelType">模型类型:</label>
+            <input type="text" id="modelType" name="modelType" value="deepseek-ai/DeepSeek-V3" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="temperature">温度参数:</label>
+            <input type="text" id="temperature" name="temperature" value="0.7">
+        </div>
+        
+        <div class="form-group">
+            <label for="maxTokens">最大Token数:</label>
+            <input type="text" id="maxTokens" name="maxTokens" value="2048">
+        </div>
+        
+        <div class="form-group">
+            <label for="userId">用户ID:</label>
+            <input type="text" id="userId" name="userId" value="test-user-001">
+        </div>
+        
+        <button type="submit">发送请求</button>
+        <div class="loading" id="loading">正在请求大模型API，请稍候...</div>
+    </form>
+    
+    <div id="response-container">
+        <h3>响应结果:</h3>
+        <div id="response"></div>
+    </div>
+    
+    <div class="debug-log">
+        <h3>调试日志:</h3>
+        <div id="log"></div>
+    </div>
+    
+    <script>
+        document.getElementById('test-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const modelType = document.getElementById('modelType').value;
+            const temperature = document.getElementById('temperature').value;
+            const maxTokens = document.getElementById('maxTokens').value;
+            const userId = document.getElementById('userId').value;
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('response').innerText = '';
+            document.getElementById('log').innerText = '开始请求...';
+            
+            // 构建URL
+            const url = `http://localhost:8083/api/llm/chat/stream?message=${encodeURIComponent(message)}&modelType=${encodeURIComponent(modelType)}&temperature=${temperature}&maxTokens=${maxTokens}&userId=${userId}`;
+            
+            logMessage(`请求URL: ${url}`);
+            
+            // 创建EventSource连接
+            const eventSource = new EventSource(url);
+            
+            // 监听message事件
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    logMessage(`接收到数据块: ${JSON.stringify(data)}`);
+                    
+                    if (data.content) {
+                        document.getElementById('response').innerText += data.content;
+                    }
+                    
+                    if (data.finished) {
+                        logMessage(`请求完成，完成原因: ${data.finishReason}`);
+                        logMessage(`Token使用量: ${data.tokenUsage || '未知'}`);
+                        eventSource.close();
+                        document.getElementById('loading').style.display = 'none';
+                    }
+                } catch (error) {
+                    logMessage(`解析数据错误: ${error.message}`);
+                }
+            };
+            
+            // 监听错误事件
+            eventSource.onerror = function(error) {
+                logMessage(`连接错误: ${error.message || '未知错误'}`);
+                document.getElementById('loading').style.display = 'none';
+                eventSource.close();
+            };
+        });
+        
+        function logMessage(message) {
+            const logElement = document.getElementById('log');
+            logElement.innerText += '\n' + new Date().toLocaleTimeString() + ': ' + message;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+    </script>
+</body>
+</html>

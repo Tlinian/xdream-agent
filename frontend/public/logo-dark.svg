@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆 -->
+  <circle cx="32" cy="32" r="30" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  
+  <!-- 星星 -->
+  <g transform="translate(32, 16)">
+    <path d="M0,-8 L2.5,-2 L8,-2 L3,2 L5,8 L0,5 L-5,8 L-3,2 L-8,-2 L-2.5,-2 Z" 
+          fill="#fbbf24" stroke="#f59e0b" stroke-width="0.8"/>
+  </g>
+  
+  <!-- 上升箭头 -->
+  <g transform="translate(32, 32)">
+    <path d="M0,-12 L-4,-6 L-2,-6 L-2,8 L2,8 L2,-6 L4,-6 Z" 
+          fill="#06b6d4" stroke="#0891b2" stroke-width="0.8"/>
+  </g>
+  
+  <!-- 底部装饰 -->
+  <circle cx="32" cy="45" r="2" fill="#c084fc"/>
+</svg>
