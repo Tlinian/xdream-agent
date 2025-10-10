@@ -44,7 +44,7 @@ coverage/
 .env.test.local
 .env.production.local
 
-./frontend/node_modules
+./frontend/node_modules/*
 ./frontend/dist
 ./backend/.idea
 ./backend/build

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Layout, Menu, Avatar, Dropdown, Button, Space, theme } from 'antd'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { UserOutlined, HomeOutlined, MessageOutlined, SettingOutlined, AppstoreOutlined, PictureOutlined, VideoCameraOutlined, AudioOutlined, ThunderboltOutlined, SoundOutlined } from '@ant-design/icons'
+import { UserOutlined, HomeOutlined, MessageOutlined, SettingOutlined, AppstoreOutlined, PictureOutlined, VideoCameraOutlined, AudioOutlined, ThunderboltOutlined, SoundOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './index.scss'
 
@@ -162,6 +162,23 @@ const MainLayout: React.FC = () => {
             </div>
           )}
         </div>
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          className="collapse-button"
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '-15px',
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            backgroundColor: '#fff',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+            zIndex: 10
+          }}
+        />
         <Menu
           theme="light"
           mode="inline"
