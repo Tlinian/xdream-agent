@@ -24,6 +24,7 @@ public class LlmController {
 
   @PostMapping("/chat")
   @Operation(summary = "简单对话", description = "简单的单次对话请求")
+  @Deprecated
   public ResponseEntity<ApiResponse<ChatResponse>> chat(
       @RequestHeader("X-User-Id") String userId, @Valid @RequestBody ChatRequest request) {
     ChatResponse response = llmService.chat(userId, request);
@@ -61,19 +62,15 @@ public class LlmController {
     request.setMaxTokens(maxTokens);
     request.setUseReAct(useReAct);
 
-    if (systemPrompt == null) {
-      systemPrompt = "你是AI智能体小梦，你能帮助解答问题、提供建议、协助创作或处理各种任务。无论是学习、工作、生活还是娱乐相关的问题，你都会尽力提供清晰、有用的信息。";
-      request.setSystemPrompt(systemPrompt);
-    }
+    systemPrompt = "你是AI智能体小梦，你能帮助解答问题、提供建议、协助创作或处理各种任务。无论是学习、工作、生活还是娱乐相关的问题，你都会尽力提供清晰、有用的信息。";
+    request.setSystemPrompt(systemPrompt);
 
-    if (systemPrompt != null) {
       ChatRequest.Message systemMessage = new ChatRequest.Message();
       systemMessage.setRole("system");
       systemMessage.setContent(systemPrompt);
       request.setMessages(List.of(systemMessage));
-    }
 
-    return llmService.streamChat(userId, request);
+      return llmService.streamChat(userId, request);
   }
 
   @PostMapping("/embeddings")

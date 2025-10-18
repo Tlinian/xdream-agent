@@ -1,5 +1,6 @@
 package com.xdream.knowledge.service;
 
+import com.xdream.common.dto.PageResponse;
 import com.xdream.knowledge.dto.*;
 import org.springframework.data.domain.Pageable;
 

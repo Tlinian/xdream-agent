@@ -36,7 +36,10 @@ public class BaseLlmClient {
       // 构建请求体
       Map<String, Object> requestBody =
           buildRequestBody(
-              request, llmProperties.getChat().getModel(), llmProperties.getChat().getMaxTokens());
+              request,
+              llmProperties.getChat().getModel(),
+              llmProperties.getChat().getMaxTokens(),
+              false);
 
       // 设置请求头
       HttpHeaders headers = new HttpHeaders();
@@ -67,7 +70,7 @@ public class BaseLlmClient {
 
   /** 调用SiliconFlow API进行流式对话 */
   public Flux<StreamResponse> streamChat(String userId, ChatRequest request) {
-    String modelType = request.getModelType() != null ? request.getModelType() : llmProperties.getChat().getModel();
+    String modelType = llmProperties.getChat().getModel();
     log.info("user: {}, model: {}", userId, modelType);
 
     Sinks.Many<StreamResponse> sink = Sinks.many().unicast().onBackpressureBuffer();
@@ -86,8 +89,8 @@ public class BaseLlmClient {
                     buildRequestBody(
                         request,
                         modelType,
-                        llmProperties.getChat().getMaxTokens());
-                requestBody.put("stream", true); // 启用流式响应
+                        llmProperties.getChat().getMaxTokens(),
+                        true);
 
                 String requestBodyJson = objectMapper.writeValueAsString(requestBody);
                 log.info("Request body: {}", requestBodyJson);
@@ -170,12 +173,12 @@ public class BaseLlmClient {
                           if (delta.containsKey("content")) {
                             String content = (String) delta.get("content");
 
-                            StreamResponse streamChunk = new StreamResponse();
-                            streamChunk.setStreamId(streamId);
-                            streamChunk.setModelType(modelType);
-                            streamChunk.setContent(content);
-                            streamChunk.setFinished(false);
-
+                            StreamResponse streamChunk = StreamResponse.builder()
+                                    .streamId(streamId)
+                                    .modelType(modelType)
+                                    .content(content)
+                                    .finished(false)
+                                    .build();
                             sink.tryEmitNext(streamChunk);
                           }
                         }
@@ -184,14 +187,14 @@ public class BaseLlmClient {
                         if (!choices.isEmpty() && choices.get(0).containsKey("finish_reason")) {
                           String finishReason = (String) choices.get(0).get("finish_reason");
                           if (finishReason != null) {
-                            StreamResponse finalChunk = new StreamResponse();
-                            finalChunk.setStreamId(streamId);
-                            finalChunk.setModelType(modelType);
-                            finalChunk.setContent("");
-                            finalChunk.setFinished(true);
-                            finalChunk.setFinishReason(finishReason);
-                            finalChunk.setTokenUsage(estimateTokenUsage(request.getMessage(), ""));
-
+                            StreamResponse finalChunk = StreamResponse.builder()
+                                    .streamId(streamId)
+                                    .modelType(modelType)
+                                    .content("")
+                                    .finished(true)
+                                    .finishReason(finishReason)
+                                    .tokenUsage(estimateTokenUsage(request.getMessage(), ""))
+                                    .build();
                             sink.tryEmitNext(finalChunk);
                             break;
                           }
@@ -331,11 +334,11 @@ public class BaseLlmClient {
 
   /** 构建请求体 */
   private Map<String, Object> buildRequestBody(
-      ChatRequest request, String modelType, int maxTokens) {
+      ChatRequest request, String modelType, int maxTokens, boolean stream) {
     Map<String, Object> requestBody = new HashMap<>();
 
     // 设置模型
-    requestBody.put("model", llmProperties.getChat().getModel());
+    requestBody.put("model", modelType != null ? modelType : llmProperties.getChat().getModel());
 
     // 构建消息列表
     List<Map<String, String>> messages = new ArrayList<>();
@@ -373,7 +376,7 @@ public class BaseLlmClient {
     }
 
     // 设置流式响应
-    requestBody.put("stream", true);
+    requestBody.put("stream", stream);
 
     return requestBody;
   }

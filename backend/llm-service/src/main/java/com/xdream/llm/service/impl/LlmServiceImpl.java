@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 @Slf4j
 @Service
@@ -24,6 +25,10 @@ public class LlmServiceImpl implements LlmService {
   private final AiProperties aiProperties;
   private final ReActAgentService reactAgentService;
   private final Random random = new Random();
+  private static final String ANSWER_START = "[ANSWER_START]";
+  private static final String ANSWER_END = "[ANSWER_END]";
+  private static final String THOUGHT_START = "[THINKING_START]";
+  private static final String THOUGHT_END = "[THINKING_END]";
 
   // 模拟的模型数据
   private static final Map<String, ModelInfoResponse> AVAILABLE_MODELS = new HashMap<>();
@@ -140,7 +145,7 @@ public class LlmServiceImpl implements LlmService {
     // 检查是否使用ReAct模式
     if (request.getUseReAct() != null && request.getUseReAct()) {
       log.info("使用ReAct模式处理请求");
-      return reactAgentService.processWithReAct(userId, "general-assistant", request.getMessage());
+//      return reactAgentService.processWithReAct(userId, "general-assistant", request.getMessage());
     }
 
     // 如果是SiliconFlow模型，调用真实API
@@ -210,16 +215,16 @@ public class LlmServiceImpl implements LlmService {
               try {
                 // 模拟逐字发送
                 for (int i = 0; i < words.length; i++) {
-                  StreamResponse chunk = new StreamResponse();
-                  chunk.setStreamId(streamId);
-                  chunk.setModelType(request.getModelType());
-                  chunk.setContent(words[i] + " ");
-                  chunk.setFinished(i == words.length - 1);
-                  chunk.setFinishReason(i == words.length - 1 ? "stop" : null);
-                  chunk.setTokenUsage(
-                      i == words.length - 1
+                  StreamResponse chunk = StreamResponse.builder()
+                          .streamId(streamId)
+                          .modelType(request.getModelType())
+                          .content(words[i] + " ")
+                          .finished(i == words.length - 1)
+                          .finishReason(i == words.length - 1 ? "stop" : null)
+                          .tokenUsage(
+                              i == words.length - 1
                           ? estimateTokenUsage(request.getMessage(), responseContent)
-                          : null);
+                          : null).build();
 
                   sink.next(chunk);
 
@@ -255,16 +260,16 @@ public class LlmServiceImpl implements LlmService {
 
             try {
               for (int i = 0; i < words.length; i++) {
-                StreamResponse chunk = new StreamResponse();
-                chunk.setStreamId(streamId);
-                chunk.setModelType(request.getModelType());
-                chunk.setContent(words[i] + " ");
-                chunk.setFinished(i == words.length - 1);
-                chunk.setFinishReason(i == words.length - 1 ? "error" : null);
-                chunk.setTokenUsage(
-                    i == words.length - 1
+                StreamResponse chunk = StreamResponse.builder()
+                        .streamId(streamId)
+                        .modelType(request.getModelType())
+                        .content(words[i] + " ")
+                        .finished(i == words.length - 1)
+                        .finishReason(i == words.length - 1 ? "error" : null)
+                        .tokenUsage(
+                            i == words.length - 1
                         ? estimateTokenUsage(request.getMessage(), errorMessage)
-                        : null);
+                        : null).build();
 
                 sink.next(chunk);
 
@@ -557,179 +562,63 @@ public class LlmServiceImpl implements LlmService {
     return (int) ((input.length() + output.length()) * 0.5);
   }
 
-  private String generateSmartFallbackResponse(String message) {
-    // 智能备用响应生成
-    String lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.contains("你好")
-        || lowerMessage.contains("hi")
-        || lowerMessage.contains("hello")) {
-      return "你好！很高兴为你提供帮助。我是一个AI助手，可以回答各种问题、提供建议，或者协助你完成各种任务。有什么我可以帮助你的吗？";
-    }
-
-    if (lowerMessage.contains("技术") || lowerMessage.contains("编程") || lowerMessage.contains("代码")) {
-      return "我理解你询问的是技术相关的问题。技术领域非常广泛，包括编程语言、框架、算法、系统架构等多个方面。\n\n为了更好地帮助你，我建议：\n1. 明确具体的技术问题\n2. 提供相关的代码片段或错误信息\n3. 说明你的预期结果和实际遇到的问题\n\n这样我就能给出更准确和有用的建议。";
-    }
-
-    if (lowerMessage.contains("spring") || lowerMessage.contains("boot")) {
-      return "Spring Boot 是一个非常流行的 Java 框架，用于快速开发独立的、生产级别的 Spring 应用程序。\n\n它提供了以下核心特性：\n• 自动配置：根据项目依赖自动配置 Spring 应用\n• 起步依赖：简化 Maven 和 Gradle 配置\n• 内嵌服务器：无需部署 WAR 文件\n• 生产级监控：提供健康检查和指标监控\n\n如果你有具体的 Spring Boot 问题，我很乐意为你详细解答。";
-    }
-
-    if (lowerMessage.contains("微服务") || lowerMessage.contains("架构")) {
-      return "微服务架构是一种将单个应用程序开发为一组小型服务的方法，每个服务都在自己的进程中运行，并使用轻量级机制（通常是 HTTP 资源 API）进行通信。\n\n微服务的主要优势包括：\n• 独立部署：每个服务可以独立开发、部署和扩展\n• 技术多样性：可以使用不同的编程语言和数据存储技术\n• 故障隔离：一个服务的故障不会影响整个系统\n• 团队自治：小型团队可以独立负责特定服务\n\n这种架构特别适合大型复杂应用，但也带来了服务间通信、数据一致性等挑战。";
-    }
-
-    // 通用备用响应
-    return "感谢你的提问。我已经仔细思考了你的问题，这是一个很有意思的话题。\n\n基于我的理解，我可以从多个角度来分析和回答这个问题。如果你需要更具体的信息或者有其他相关问题，请随时告诉我，我会尽力为你提供详细和准确的回答。\n\n有什么特定的方面你希望我重点说明吗？";
-  }
-
   private Flux<StreamResponse> processStreamWithReAct(String userId, ChatRequest request) {
     return Flux.create(
         sink -> {
           String streamId = UUID.randomUUID().toString();
-
           try {
             log.info("开始ReAct模式处理，用户: {}, 消息: {}", userId, request.getMessage());
-            String message = request.getMessage().toLowerCase();
-            boolean isTimeQuery =
-                message.contains("时间")
-                    || message.contains("几点")
-                    || message.contains("current time");
-
             // 第一阶段：发送思考过程
-            String[] thinkingSteps;
-            if (isTimeQuery) {
-              // 针对时间查询的特殊思考过程
-              thinkingSteps =
-                  new String[] {
-                    "正在分析问题...\n",
-                    "用户需要查询当前时间\n",
-                    "我有工具可以获取精确时间\n",
-                    "选择 get_current_time 工具\n",
-                    "执行工具获取当前时间...\n",
-                    "已获取时间信息，准备生成答案...\n"
-                  };
-            } else {
-              // 通用思考过程
-              thinkingSteps =
-                  new String[] {
-                    "正在分析问题...\n",
-                    "理解用户需求：" + request.getMessage() + "\n",
-                    "确定解决思路...\n",
-                    "考虑相关背景知识...\n",
-                    "制定回答策略...\n",
-                    "准备生成最终答案...\n"
-                  };
-            }
-
             // 发送思考开始标记
-            StreamResponse thinkingStart = new StreamResponse();
-            thinkingStart.setStreamId(streamId);
-            thinkingStart.setModelType(request.getModelType());
-            thinkingStart.setContent("[THINKING_START]");
-            thinkingStart.setFinished(false);
-            thinkingStart.setFinishReason(null);
-            sink.next(thinkingStart);
-
-            // 逐步发送思考过程
-            for (String step : thinkingSteps) {
-              StreamResponse thinkingChunk = new StreamResponse();
-              thinkingChunk.setStreamId(streamId);
-              thinkingChunk.setModelType(request.getModelType());
-              thinkingChunk.setContent(step);
-              thinkingChunk.setFinished(false);
-              thinkingChunk.setFinishReason(null);
-              sink.next(thinkingChunk);
-
-              // 模拟思考延迟
-              try {
-                Thread.sleep(300 + random.nextInt(400)); // 300-700ms随机延迟
-              } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                sink.error(e);
-                return;
-              }
-            }
-
-            // 发送思考结束标记
-            StreamResponse thinkingEnd = new StreamResponse();
-            thinkingEnd.setStreamId(streamId);
-            thinkingEnd.setModelType(request.getModelType());
-            thinkingEnd.setContent("[THINKING_END]");
-            thinkingEnd.setFinished(false);
-            thinkingEnd.setFinishReason(null);
-            sink.next(thinkingEnd);
-
+            sendThinkingStart(StreamResponse.builder()
+                    .streamId(streamId)
+                    .modelType(request.getModelType())
+                    .content(THOUGHT_START)
+                    .finished(false)
+                    .finishReason(null), sink);
             // 短暂停顿，让用户看到思考完成
             try {
               Thread.sleep(500);
             } catch (InterruptedException e) {
               Thread.currentThread().interrupt();
             }
-
             // 第二阶段：生成最终答案
             log.info("开始生成最终答案，用户: {}", userId);
-
-            // 发送答案开始标记
-            StreamResponse answerStart = new StreamResponse();
-            answerStart.setStreamId(streamId);
-            answerStart.setModelType(request.getModelType());
-            answerStart.setContent("[ANSWER_START]");
-            answerStart.setFinished(false);
-            answerStart.setFinishReason(null);
-            sink.next(answerStart);
-
             // 调用ReAct服务获取最终答案
             String finalAnswer;
             try {
-              if (isTimeQuery) {
-                // 对于时间查询，直接调用get_current_time工具的执行逻辑
-                // 避免完整的ReAct流程可能带来的问题
-                LocalDateTime now = LocalDateTime.now();
-                finalAnswer =
-                    String.format(
-                        "当前时间是：%d年%d月%d日 %d:%02d:%02d",
-                        now.getYear(),
-                        now.getMonthValue(),
-                        now.getDayOfMonth(),
-                        now.getHour(),
-                        now.getMinute(),
-                        now.getSecond());
-                log.info("直接获取当前时间: {}", finalAnswer);
-              } else {
-                // 其他问题使用完整的ReAct流程
-                finalAnswer =
-                    reactAgentService
-                        .processWithReAct(userId, "general-assistant", request.getMessage())
-                        .getResponse();
+              finalAnswer =
+                      reactAgentService
+                              .processWithReAct(userId, "general-assistant", request,sink)
+                              .getResponse();
 
-                // 清理答案格式
-                finalAnswer =
-                    finalAnswer
-                        .replace("Final Answer: ", "")
-                        .replace("最终答案: ", "")
-                        .replace("Thought: 我现在知道最终答案了", "")
-                        .trim();
-              }
+              // 清理答案格式
+              finalAnswer =
+                      finalAnswer
+                              .replace("Final Answer: ", "")
+                              .replace("最终答案: ", "")
+                              .replace("Thought: 我现在知道最终答案了", "")
+                              .trim();
 
             } catch (Exception e) {
               log.error("ReAct服务调用失败: {}", e.getMessage());
-              if (isTimeQuery) {
-                // 时间查询失败时的备用处理
-                LocalDateTime now = LocalDateTime.now();
-                finalAnswer =
-                    String.format(
-                        "获取时间信息: %d年%d月%d日 %d:%02d:%02d",
-                        now.getYear(),
-                        now.getMonthValue(),
-                        now.getDayOfMonth(),
-                        now.getHour(),
-                        now.getMinute(),
-                        now.getSecond());
-              } else {
-                finalAnswer = generateSmartFallbackResponse(request.getMessage());
-              }
+              finalAnswer = "大模型调用失败：" + e.getMessage();
             }
+            sendThinkingStart(StreamResponse.builder()
+                    .streamId(streamId)
+                    .modelType(request.getModelType())
+                    .content(THOUGHT_END)
+                    .finished(false)
+                    .finishReason(null), sink);
+
+            StreamResponse answerStart = StreamResponse.builder()
+                    .streamId(streamId)
+                    .modelType(request.getModelType())
+                    .content("[ANSWER_START]")
+                    .finished(false)
+                    .finishReason(null)
+                    .build();
+            sink.next(answerStart);
 
             // 逐步发送最终答案
             String[] sentences = finalAnswer.split("[。！？\\n]");
@@ -738,12 +627,13 @@ public class LlmServiceImpl implements LlmService {
 
               String sentence = sentences[i].trim() + (i < sentences.length - 1 ? "。" : "");
 
-              StreamResponse answerChunk = new StreamResponse();
-              answerChunk.setStreamId(streamId);
-              answerChunk.setModelType(request.getModelType());
-              answerChunk.setContent(sentence);
-              answerChunk.setFinished(false);
-              answerChunk.setFinishReason(null);
+              StreamResponse answerChunk = StreamResponse.builder()
+                      .streamId(streamId)
+                      .modelType(request.getModelType())
+                      .content(sentence)
+                      .finished(false)
+                      .finishReason(null)
+                      .build();
               sink.next(answerChunk);
 
               // 流式发送延迟
@@ -757,13 +647,14 @@ public class LlmServiceImpl implements LlmService {
             }
 
             // 发送完成标记
-            StreamResponse completeChunk = new StreamResponse();
-            completeChunk.setStreamId(streamId);
-            completeChunk.setModelType(request.getModelType());
-            completeChunk.setContent("");
-            completeChunk.setFinished(true);
-            completeChunk.setFinishReason("stop");
-            completeChunk.setTokenUsage(estimateTokenUsage(request.getMessage(), finalAnswer));
+            StreamResponse completeChunk = StreamResponse.builder()
+                    .streamId(streamId)
+                    .modelType(request.getModelType())
+                    .content("")
+                    .finished(true)
+                    .finishReason("stop")
+                    .tokenUsage(estimateTokenUsage(request.getMessage(), finalAnswer))
+                    .build();
             sink.next(completeChunk);
 
             sink.complete();
@@ -774,5 +665,10 @@ public class LlmServiceImpl implements LlmService {
             sink.error(e);
           }
         });
+  }
+
+  private static void sendThinkingStart(StreamResponse.StreamResponseBuilder streamId, FluxSink<StreamResponse> sink) {
+    StreamResponse thinkingStart = streamId.build();
+    sink.next(thinkingStart);
   }
 }

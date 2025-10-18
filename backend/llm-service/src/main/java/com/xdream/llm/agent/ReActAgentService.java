@@ -4,12 +4,14 @@ import com.xdream.llm.client.BaseLlmClient;
 import com.xdream.llm.config.LlmProperties;
 import com.xdream.llm.dto.ChatRequest;
 import com.xdream.llm.dto.ChatResponse;
+import com.xdream.llm.dto.StreamResponse;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.FluxSink;
 
 @Slf4j
 @Service
@@ -167,13 +169,13 @@ public class ReActAgentService {
             """;
   }
 
-  public ChatResponse processWithReAct(String userId, String agentId, String userMessage) {
+  public ChatResponse processWithReAct(String userId, String agentId, ChatRequest request, FluxSink<StreamResponse> sink) {
     ReActAgent agent = agents.get(agentId);
     if (agent == null) {
       throw new IllegalArgumentException("Agent不存在: " + agentId);
     }
 
-    log.info("ReAct Agent处理请求 - User: {}, Agent: {}, Message: {}", userId, agentId, userMessage);
+    log.info("ReAct Agent处理请求 - User: {}, Agent: {}, Message: {}", userId, agentId, request.getMessage());
 
     // 清除之前的思考过程
     agent.getThoughtProcess().clear();
@@ -187,7 +189,7 @@ public class ReActAgentService {
       log.info("ReAct迭代 {} 开始", iteration);
 
       // 构建ReAct提示词
-      String reactPrompt = buildReActPrompt(agent, userMessage);
+      String reactPrompt = buildReActPrompt(agent, request.getMessage());
       log.debug("构建的ReAct提示词: {}", reactPrompt);
 
       // 创建聊天请求
@@ -202,6 +204,15 @@ public class ReActAgentService {
         // 调用SiliconFlow API获取思考和行动
         ChatResponse llmResponse = client.chat(userId, chatRequest);
         String rawResponse = llmResponse.getResponse();
+        StreamResponse streamResponse = StreamResponse.builder()
+            .streamId(llmResponse.getId())
+            .modelType(llmResponse.getModelType())
+            .content(rawResponse)
+            .finished(false)
+            .finishReason(llmResponse.getFinishReason())
+            .tokenUsage(llmResponse.getTokenUsage())
+            .build();
+        sink.next(streamResponse);
         log.debug("LLM原始响应: {}", rawResponse);
 
         // 解析LLM响应，检查是否直接给出了最终答案

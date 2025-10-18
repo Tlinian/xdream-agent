@@ -47,6 +47,7 @@ coverage/
 ./frontend/node_modules/*
 ./frontend/dist
 ./backend/.idea
+./backend/.gradle
 ./backend/build
 ./backend/agent-service/build
 ./backend/auth-service/build
