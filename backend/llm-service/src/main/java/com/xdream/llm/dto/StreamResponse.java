@@ -7,25 +7,25 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "流式响应")
+@Schema(description = "娴佸紡鍝嶅簲")
 @Builder
 public class StreamResponse {
 
-  @Schema(description = "流式响应ID")
+  @Schema(description = "娴佸紡鍝嶅簲ID")
   private String streamId;
 
-  @Schema(description = "使用的模型", example = "gpt-3.5-turbo")
+  @Schema(description = "浣跨敤鐨勬ā鍨?, example = "gpt-3.5-turbo")
   private String modelType;
 
-  @Schema(description = "流式内容", example = "多线程")
+  @Schema(description = "娴佸紡鍐呭", example = "澶氱嚎绋?)
   private String content;
 
-  @Schema(description = "是否完成", example = "false")
+  @Schema(description = "鏄惁瀹屾垚", example = "false")
   private Boolean finished;
 
-  @Schema(description = "完成原因", example = "")
+  @Schema(description = "瀹屾垚鍘熷洜", example = "")
   private String finishReason;
 
-  @Schema(description = "token使用量", example = "0")
+  @Schema(description = "token浣跨敤閲?, example = "0")
   private Integer tokenUsage;
 }

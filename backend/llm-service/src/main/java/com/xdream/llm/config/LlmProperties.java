@@ -32,3 +32,4 @@ public class LlmProperties {
     private Integer maxTokens;
   }
 }
+

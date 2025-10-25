@@ -15,7 +15,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    // 添加异步支持过滤器
+    // 娣诲姞寮傛鏀寔杩囨护鍣?
     http.addFilterBefore(asyncManagerIntegrationFilter(), HeaderWriterFilter.class);
     http.addFilterBefore(characterEncodingFilter(), WebAsyncManagerIntegrationFilter.class);
 

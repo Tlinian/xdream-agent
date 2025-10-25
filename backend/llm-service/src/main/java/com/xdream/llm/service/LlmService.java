@@ -13,6 +13,8 @@ public interface LlmService {
 
   ImageGenerationResponse generateImage(String userId, ImageGenerationRequest request);
 
+  RerankResponse rerank(String userId, RerankRequest request);
+
   ModelListResponse getModels(String userId);
 
   ModelInfoResponse getModelInfo(String userId, String modelId);

@@ -16,7 +16,7 @@ public class ImageGenerationTest {
 
   @Test
   void testGenerateImage() {
-    // 创建图片生成请求
+    // 鍒涘缓鍥剧墖鐢熸垚璇锋眰
     ImageGenerationRequest request = new ImageGenerationRequest();
     request.setPrompt(
         "an island near sea, with seagulls, moon shining over the sea, light house, boats int he background, fish flying over the sea");
@@ -26,24 +26,24 @@ public class ImageGenerationTest {
     request.setResponseFormat("url");
 
     try {
-      // 调用图片生成服务
+      // 璋冪敤鍥剧墖鐢熸垚鏈嶅姟
       String userId = "test-user-001";
       ImageGenerationResponse response = llmService.generateImage(userId, request);
 
-      // 输出结果
-      log.info("图片生成成功，模型类型: {}", response.getModelType());
-      log.info("创建时间: {}", response.getCreatedAt());
+      // 杈撳嚭缁撴灉
+      log.info("鍥剧墖鐢熸垚鎴愬姛锛屾ā鍨嬬被鍨? {}", response.getModelType());
+      log.info("鍒涘缓鏃堕棿: {}", response.getCreatedAt());
 
       if (response.getImages() != null && !response.getImages().isEmpty()) {
         for (int i = 0; i < response.getImages().size(); i++) {
           ImageGenerationResponse.ImageData imageData = response.getImages().get(i);
-          log.info("第{}张图片URL: {}", i + 1, imageData.getUrl());
-          log.info("结束原因: {}", imageData.getFinishReason());
+          log.info("绗瑊}寮犲浘鐗嘦RL: {}", i + 1, imageData.getUrl());
+          log.info("缁撴潫鍘熷洜: {}", imageData.getFinishReason());
         }
       }
 
     } catch (Exception e) {
-      log.error("图片生成失败: {}", e.getMessage(), e);
+      log.error("鍥剧墖鐢熸垚澶辫触: {}", e.getMessage(), e);
     }
   }
 }

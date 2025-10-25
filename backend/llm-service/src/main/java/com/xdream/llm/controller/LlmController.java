@@ -73,6 +73,16 @@ public class LlmController {
       return llmService.streamChat(userId, request);
   }
 
+
+  @PostMapping("/rerank")
+  @Operation(summary = "閲嶆帓搴?, description = "璋冪敤閲嶆帓搴忔ā鍨嬪鍊欓€夋枃鏈繘琛屾墦鍒?)
+  public ResponseEntity<ApiResponse<RerankResponse>> rerank(
+      @RequestHeader("X-User-Id") String userId,
+      @Valid @RequestBody RerankRequest request) {
+    RerankResponse response = llmService.rerank(userId, request);
+    return ResponseEntity.ok(ApiResponse.success(response));
+  }
+
   @PostMapping("/embeddings")
   @Operation(summary = "生成嵌入", description = "生成文本的嵌入向量")
   public ResponseEntity<ApiResponse<EmbeddingResponse>> generateEmbeddings(

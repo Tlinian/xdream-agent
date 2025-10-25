@@ -1,53 +1,104 @@
 server:
+
   port: 8084
+
   servlet:
+
     context-path: /api
 
+
+
 spring:
+
   application:
+
     name: llm-service
+
   
-  # Redis配置
+
+  # Redis閰嶇疆
+
   data:
+
     redis:
+
       host: localhost
+
       port: 6379
+
       database: 3
+
       timeout: 2000ms
+
       lettuce:
+
         pool:
+
           max-active: 8
+
           max-idle: 8
+
           min-idle: 0
 
-# Eureka配置
+
+
+# Eureka閰嶇疆
+
 eureka:
+
   client:
+
     service-url:
+
       defaultZone: http://localhost:8761/eureka/
+
   instance:
+
     prefer-ip-address: true
+
     instance-id: ${spring.application.name}:${server.port}
 
-# 监控配置
+
+
+# 鐩戞帶閰嶇疆
+
 management:
+
   endpoints:
+
     web:
+
       exposure:
+
         include: health,info,metrics
+
   endpoint:
+
     health:
+
       show-details: always
 
-# 日志配置
+
+
+# 鏃ュ織閰嶇疆
+
 logging:
+
   level:
+
     com.xdream: DEBUG
+
     org.springframework.security: DEBUG
+
     org.springframework.web: DEBUG
+
     org.apache.coyote.http11: DEBUG
+
   pattern:
+
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+
 
 llm:
   chat:
@@ -67,69 +118,165 @@ llm:
     api-key: ${SILICONFLOW_API_KEY:sk-junudplcgugwrczjbdwfezczmjcwyjcgecfyhwyfkrfdrqak}
     max-retries: 16384
     timeout: 30000
-
-# AI服务配置
-ai:
-  openai:
-    api-key: ${OPENAI_API_KEY:your-openai-api-key}
-    base-url: https://api.openai.com
-    timeout: 30000
-    max-retries: 3
-  
-  anthropic:
-    api-key: ${ANTHROPIC_API_KEY:your-anthropic-api-key}
-    base-url: https://api.anthropic.com
-    timeout: 30000
-    max-retries: 3
-  
-  siliconflow:
-    api-key: ${SILICONFLOW_API_KEY:sk-junudplcgugwrczjbdwfezczmjcwyjcgecfyhwyfkrfdrqak}
+  embedding:
+    model: BAAI/bge-large-zh-v1.5
     base-url: https://api.siliconflow.cn/v1
-    interface-url: /chat/completions
-    model: Qwen/Qwen2.5-7B-Instruct
-    max-tokens: 4096
+    interface-url: /embeddings
+    api-key: ${SILICONFLOW_API_KEY:sk-siajbtsbuxwcojdgmmilhfomowrqbskusznhxqqaemikvdvj}
     timeout: 30000
     max-retries: 3
+  rerank:
+    model: BAAI/bge-reranker-v2-m3
+    base-url: https://api.siliconflow.cn/v1
+    interface-url: /rerank
+    api-key: ${SILICONFLOW_API_KEY:sk-siajbtsbuxwcojdgmmilhfomowrqbskusznhxqqaemikvdvj}
+    timeout: 30000
+    max-retries: 3
+
+vector:
+  type: postgres
+  host: localhost
+  port: 5432
+  database: postgres
+  username: postgres
+  password: 123456
+
+knowledge:
+  enabled: true
+  base-url: http://localhost:8085/knowledge
+  default-top-k: 4
+  default-similarity-threshold: 0.6
+  default-rerank-top-k: 3
+  append-citation-by-default: true
+
+
+# AI鏈嶅姟閰嶇疆
+
+ai:
+
+  openai:
+
+    api-key: ${OPENAI_API_KEY:your-openai-api-key}
+
+    base-url: https://api.openai.com
+
+    timeout: 30000
+
+    max-retries: 3
+
   
-  # 默认模型配置
+
+  anthropic:
+
+    api-key: ${ANTHROPIC_API_KEY:your-anthropic-api-key}
+
+    base-url: https://api.anthropic.com
+
+    timeout: 30000
+
+    max-retries: 3
+
+  
+
+  siliconflow:
+
+    api-key: ${SILICONFLOW_API_KEY:sk-junudplcgugwrczjbdwfezczmjcwyjcgecfyhwyfkrfdrqak}
+
+    base-url: https://api.siliconflow.cn/v1
+
+    interface-url: /chat/completions
+    api-key: 
+    model: Qwen/Qwen2.5-7B-Instruct
+
+    max-tokens: 4096
+
+    timeout: 30000
+
+    max-retries: 3
+
+  
+
+  # 榛樿妯″瀷閰嶇疆
+
   default:
+
     chat-model: deepseek-ai/DeepSeek-V3
+
     embedding-model: text-embedding-ada-002
+
     max-tokens: 16384
+
     temperature: 0.7
 
-# 限流配置
+
+
+# 闄愭祦閰嶇疆
+
 rate-limit:
+
   enabled: true
-  # 每分钟最大请求数
+
+  # 姣忓垎閽熸渶澶ц姹傛暟
+
   requests-per-minute: 60
-  # 每天最大token使用量
+
+  # 姣忓ぉ鏈€澶oken浣跨敤閲?
+
   tokens-per-day: 100000
-  # 每分钟最大token使用量
+
+  # 姣忓垎閽熸渶澶oken浣跨敤閲?
+
   tokens-per-minute: 10000
 
-# 开发环境配置
+
+
+# 寮€鍙戠幆澧冮厤缃?
+
 ---
+
 spring:
+
   config:
+
     activate:
+
       on-profile: dev
+
   devtools:
+
     remote:
+
       secret: xdream-agent-debug
 
-# 生产环境配置
+
+
+# 鐢熶骇鐜閰嶇疆
+
 ---
+
 spring:
+
   config:
+
     activate:
+
       on-profile: prod
+
   data:
+
     redis:
+
       host: ${REDIS_HOST:localhost}
+
       port: ${REDIS_PORT:6379}
 
+
+
 logging:
+
   level:
+
     com.xdream: INFO
+
     org.springframework.security: INFO
+

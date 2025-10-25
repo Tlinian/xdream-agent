@@ -7,54 +7,55 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Schema(description = "文档响应")
+@Schema(description = "鏂囨。鍝嶅簲")
 public class DocumentResponse {
     
-    @Schema(description = "文档ID")
+    @Schema(description = "鏂囨。ID")
     private String documentId;
     
-    @Schema(description = "文档标题")
+    @Schema(description = "鏂囨。鏍囬")
     private String title;
     
-    @Schema(description = "文档内容")
+    @Schema(description = "鏂囨。鍐呭")
     private String content;
     
-    @Schema(description = "文档描述")
+    @Schema(description = "鏂囨。鎻忚堪")
     private String description;
     
-    @Schema(description = "文档类型")
+    @Schema(description = "鏂囨。绫诲瀷")
     private String documentType;
     
-    @Schema(description = "分类")
+    @Schema(description = "鍒嗙被")
     private String category;
     
-    @Schema(description = "标签列表")
+    @Schema(description = "鏍囩鍒楄〃")
     private List<String> tags;
     
-    @Schema(description = "文件大小（字节）")
+    @Schema(description = "鏂囦欢澶у皬锛堝瓧鑺傦級")
     private Long fileSize;
     
-    @Schema(description = "文档状态")
+    @Schema(description = "鏂囨。鐘舵€?)
     private String status;
     
-    @Schema(description = "处理状态")
+    @Schema(description = "澶勭悊鐘舵€?)
     private String processStatus;
     
-    @Schema(description = "处理信息")
+    @Schema(description = "澶勭悊淇℃伅")
     private String processMessage;
     
-    @Schema(description = "向量数量")
+    @Schema(description = "鍚戦噺鏁伴噺")
     private Integer vectorCount;
     
-    @Schema(description = "创建者ID")
+    @Schema(description = "鍒涘缓鑰匢D")
     private String createdBy;
     
-    @Schema(description = "创建时间")
+    @Schema(description = "鍒涘缓鏃堕棿")
     private LocalDateTime createdAt;
     
-    @Schema(description = "更新时间")
+    @Schema(description = "鏇存柊鏃堕棿")
     private LocalDateTime updatedAt;
     
-    @Schema(description = "处理时间")
+    @Schema(description = "澶勭悊鏃堕棿")
     private LocalDateTime processedAt;
 }
+

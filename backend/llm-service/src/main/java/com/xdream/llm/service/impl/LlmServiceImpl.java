@@ -3,6 +3,11 @@ package com.xdream.llm.service.impl;
 import com.xdream.llm.agent.ReActAgentService;
 import com.xdream.llm.client.BaseLlmClient;
 import com.xdream.llm.config.AiProperties;
+import com.xdream.llm.knowledge.KnowledgeSearchResponse;
+import com.xdream.llm.knowledge.KnowledgeSearchRequest;
+import com.xdream.llm.knowledge.KnowledgeSearchClient;
+import com.xdream.llm.config.KnowledgeIntegrationProperties;
+import com.xdream.common.dto.ApiResponse;
 import com.xdream.llm.dto.*;
 import com.xdream.llm.service.LlmService;
 import java.time.LocalDate;
@@ -13,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -24,6 +30,8 @@ public class LlmServiceImpl implements LlmService {
   private final BaseLlmClient client;
   private final AiProperties aiProperties;
   private final ReActAgentService reactAgentService;
+  private final KnowledgeSearchClient knowledgeSearchClient;
+  private final KnowledgeIntegrationProperties knowledgeIntegrationProperties;
   private final Random random = new Random();
   private static final String ANSWER_START = "[ANSWER_START]";
   private static final String ANSWER_END = "[ANSWER_END]";
@@ -142,6 +150,8 @@ public class LlmServiceImpl implements LlmService {
       throw new IllegalArgumentException("不支持的模型类型: " + request.getModelType());
     }
 
+    enrichWithKnowledge(userId, request);
+
     // 检查是否使用ReAct模式
     if (request.getUseReAct() != null && request.getUseReAct()) {
       log.info("使用ReAct模式处理请求");
@@ -166,6 +176,13 @@ public class LlmServiceImpl implements LlmService {
   private ChatResponse generateMockChatResponse(String userId, ChatRequest request) {
     String responseContent = generateMockResponse(request.getMessage());
     int tokenUsage = estimateTokenUsage(request.getMessage(), responseContent);
+
+    if (request.getKnowledge() != null
+        && Boolean.TRUE.equals(request.getKnowledge().getAppendCitations())
+        && request.getKnowledgeSnippets() != null
+        && !request.getKnowledgeSnippets().isEmpty()) {
+      responseContent = responseContent + buildCitationFooter(request.getKnowledgeSnippets());
+    }
 
     ChatResponse response = new ChatResponse();
     response.setId(UUID.randomUUID().toString());
@@ -295,13 +312,24 @@ public class LlmServiceImpl implements LlmService {
   @Override
   public EmbeddingResponse generateEmbeddings(String userId, EmbeddingRequest request) {
     log.info("Embedding request for user: {}, model: {}", userId, request.getModelType());
-
-    // 验证模型是否可用
-    if (!AVAILABLE_MODELS.containsKey(request.getModelType())) {
-      throw new IllegalArgumentException("不支持的模型类型: " + request.getModelType());
+    try {
+      return client.generateEmbeddingsFromApi(userId, request);
+    } catch (Exception ex) {
+      log.error("Fallback to mock embedding due to error: {}", ex.getMessage());
+      int dimensions = 1536;
+      List<Float> embedding = generateMockEmbedding(dimensions);
+      EmbeddingResponse fallback = new EmbeddingResponse();
+      fallback.setId(UUID.randomUUID().toString());
+      fallback.setModelType(request.getModelType());
+      fallback.setEmbedding(embedding);
+      fallback.setDimensions(dimensions);
+      fallback.setTokenUsage(estimateTokenUsage(request.getText(), ""));
+      fallback.setCreatedAt(LocalDateTime.now());
+      return fallback;
     }
+  }
 
-    // 模拟嵌入向量生成
+  // 模拟嵌入向量生成
     int dimensions = 1536; // ADA-002的维度
     List<Float> embedding = generateMockEmbedding(dimensions);
     int tokenUsage = estimateTokenUsage(request.getText(), "");
@@ -323,6 +351,15 @@ public class LlmServiceImpl implements LlmService {
     return response;
   }
 
+
+  @Override
+  public RerankResponse rerank(String userId, RerankRequest request) {
+    log.info("Rerank request for user: {}", userId);
+    if (request.getDocuments() == null || request.getDocuments().isEmpty()) {
+      throw new IllegalArgumentException("閲嶆帓搴忔枃妗ｉ泦鍚堜笉鑳戒负绌?);
+    }
+    return client.rerank(userId, request);
+  }
   @Override
   public ImageGenerationResponse generateImage(String userId, ImageGenerationRequest request) {
     log.info("Image generation request for user: {}, model: {}", userId, request.getModel());
@@ -599,6 +636,12 @@ public class LlmServiceImpl implements LlmService {
                               .replace("最终答案: ", "")
                               .replace("Thought: 我现在知道最终答案了", "")
                               .trim();
+              if (request.getKnowledge() != null
+                  && Boolean.TRUE.equals(request.getKnowledge().getAppendCitations())
+                  && request.getKnowledgeSnippets() != null
+                  && !request.getKnowledgeSnippets().isEmpty()) {
+                finalAnswer = finalAnswer + buildCitationFooter(request.getKnowledgeSnippets());
+              }
 
             } catch (Exception e) {
               log.error("ReAct服务调用失败: {}", e.getMessage());
@@ -670,5 +713,110 @@ public class LlmServiceImpl implements LlmService {
   private static void sendThinkingStart(StreamResponse.StreamResponseBuilder streamId, FluxSink<StreamResponse> sink) {
     StreamResponse thinkingStart = streamId.build();
     sink.next(thinkingStart);
+  
+  private void enrichWithKnowledge(String userId, ChatRequest request) {
+    if (!knowledgeIntegrationProperties.isEnabled()) {
+      return;
+    }
+    ChatRequest.KnowledgeConfig config = request.getKnowledge();
+    if (request.getMessages() == null) {
+      request.setMessages(new ArrayList<>());
+    }
+    if (config == null || !Boolean.TRUE.equals(config.getEnabled())) {
+      return;
+    }
+    String baseId = config.getKnowledgeBaseId();
+    if (baseId == null || baseId.isBlank()) {
+      log.warn("Knowledge search enabled but knowledgeBaseId missing");
+      return;
+    }
+
+    KnowledgeSearchRequest searchRequest = new KnowledgeSearchRequest();
+    searchRequest.setQuery(request.getMessage());
+    searchRequest.setTopK(config.getTopK() != null ? config.getTopK() : knowledgeIntegrationProperties.getDefaultTopK());
+    searchRequest.setSimilarityThreshold(config.getSimilarityThreshold() != null ? config.getSimilarityThreshold() : knowledgeIntegrationProperties.getDefaultSimilarityThreshold());
+    searchRequest.setUseRerank(config.getUseRerank() != null ? config.getUseRerank() : Boolean.TRUE);
+    searchRequest.setRerankTopK(config.getRerankTopK() != null ? config.getRerankTopK() : knowledgeIntegrationProperties.getDefaultRerankTopK());
+    boolean appendCitations = config.getAppendCitations() != null ? config.getAppendCitations() : knowledgeIntegrationProperties.isAppendCitationByDefault();
+    searchRequest.setAppendCitations(appendCitations);
+    if (config.getAppendCitations() == null) {
+      config.setAppendCitations(appendCitations);
+    }
+
+    try {
+      ApiResponse<KnowledgeSearchResponse> searchResponse = knowledgeSearchClient.search(userId, baseId, searchRequest);
+      if (searchResponse == null || !Boolean.TRUE.equals(searchResponse.getSuccess()) || searchResponse.getData() == null || CollectionUtils.isEmpty(searchResponse.getData().getResults())) {
+        log.info("Knowledge search returned no results");
+        return;
+      }
+      KnowledgeSearchResponse data = searchResponse.getData();
+      String prompt = buildKnowledgePrompt(data.getResults(), appendCitations);
+      ChatRequest.Message knowledgeMessage = new ChatRequest.Message();
+      knowledgeMessage.setRole("system");
+      knowledgeMessage.setContent(prompt);
+      request.getMessages().add(knowledgeMessage);
+
+      List<ChatRequest.KnowledgeSnippet> snippets = new ArrayList<>();
+      for (KnowledgeSearchResponse.Item item : data.getResults()) {
+        ChatRequest.KnowledgeSnippet snippet = new ChatRequest.KnowledgeSnippet();
+        snippet.setTitle(item.getTitle() != null ? item.getTitle() : "Untitled");
+        snippet.setCitation(item.getCitation());
+        snippet.setContent(item.getContent());
+        snippets.add(snippet);
+      }
+      request.setKnowledgeSnippets(snippets);
+
+      String baseInstruction = "璇蜂紭鍏堝弬鑰冩绱㈠埌鐨勭煡璇嗙墖娈佃繘琛屽洖绛旓紝寮曠敤鏃朵娇鐢ㄣ€?缂栧彿銆戞牸寮?;
+      if (request.getSystemPrompt() != null && !request.getSystemPrompt().isBlank()) {
+        request.setSystemPrompt(request.getSystemPrompt() + "
+
+" + baseInstruction);
+      } else {
+        request.setSystemPrompt(baseInstruction);
+      }
+    } catch (Exception ex) {
+      log.error("Knowledge search failed: {}", ex.getMessage());
+    }
   }
+
+  private String buildKnowledgePrompt(List<KnowledgeSearchResponse.Item> results, boolean appendCitations) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("鐭ヨ瘑妫€绱㈢粨鏋?
+");
+    for (int i = 0; i < results.size(); i++) {
+      KnowledgeSearchResponse.Item item = results.get(i);
+      String title = item.getTitle() != null ? item.getTitle() : "Untitled";
+      sb.append("銆?").append(i + 1).append("銆?").append(title).append("
+");
+      sb.append(item.getContent()).append("
+
+");
+    }
+    if (appendCitations) {
+      sb.append("鍥炵瓟鏃惰寮曠敤瀵瑰簲鐨勩€?缂栧彿銆戙€?);
+    }
+    return sb.toString();
+  }
+
+  private String buildCitationFooter(List<ChatRequest.KnowledgeSnippet> snippets) {
+    if (snippets == null || snippets.isEmpty()) {
+      return "";
+    }
+    StringBuilder sb = new StringBuilder();
+    sb.append("
+
+鍙傝€冭祫鏂?
+");
+    for (int i = 0; i < snippets.size(); i++) {
+      ChatRequest.KnowledgeSnippet snippet = snippets.get(i);
+      sb.append("銆?").append(i + 1).append("銆?).append(snippet.getTitle());
+      if (snippet.getCitation() != null) {
+        sb.append(" - ").append(snippet.getCitation());
+      }
+      sb.append("
+");
+    }
+    return sb.toString();
+  }
+
 }

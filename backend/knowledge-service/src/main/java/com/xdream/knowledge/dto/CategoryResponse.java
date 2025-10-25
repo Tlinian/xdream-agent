@@ -7,36 +7,36 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Schema(description = "分类响应")
+@Schema(description = "鍒嗙被鍝嶅簲")
 public class CategoryResponse {
     
-    @Schema(description = "分类ID")
+    @Schema(description = "鍒嗙被ID")
     private String categoryId;
     
-    @Schema(description = "分类名称")
+    @Schema(description = "鍒嗙被鍚嶇О")
     private String name;
     
-    @Schema(description = "分类描述")
+    @Schema(description = "鍒嗙被鎻忚堪")
     private String description;
     
-    @Schema(description = "父分类ID")
+    @Schema(description = "鐖跺垎绫籌D")
     private String parentId;
     
-    @Schema(description = "排序序号")
+    @Schema(description = "鎺掑簭搴忓彿")
     private Integer sortOrder;
     
-    @Schema(description = "文档数量")
+    @Schema(description = "鏂囨。鏁伴噺")
     private Integer documentCount;
     
-    @Schema(description = "子分类列表")
+    @Schema(description = "瀛愬垎绫诲垪琛?)
     private List<CategoryResponse> children;
     
-    @Schema(description = "创建者ID")
+    @Schema(description = "鍒涘缓鑰匢D")
     private String createdBy;
     
-    @Schema(description = "创建时间")
+    @Schema(description = "鍒涘缓鏃堕棿")
     private LocalDateTime createdAt;
     
-    @Schema(description = "更新时间")
+    @Schema(description = "鏇存柊鏃堕棿")
     private LocalDateTime updatedAt;
 }
