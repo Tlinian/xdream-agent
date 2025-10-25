@@ -7,7 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableDiscoveryClient\r\n@EnableFeignClients(basePackages = "com.xdream.llm")
+@EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.xdream.llm")
 @EnableAsync
 @ComponentScan(basePackages = {"com.xdream.llm", "com.xdream.common"})
 public class LlmServiceApplication {

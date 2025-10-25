@@ -713,6 +713,7 @@ public class LlmServiceImpl implements LlmService {
   private static void sendThinkingStart(StreamResponse.StreamResponseBuilder streamId, FluxSink<StreamResponse> sink) {
     StreamResponse thinkingStart = streamId.build();
     sink.next(thinkingStart);
+  }
   
   private void enrichWithKnowledge(String userId, ChatRequest request) {
     if (!knowledgeIntegrationProperties.isEnabled()) {
@@ -766,11 +767,9 @@ public class LlmServiceImpl implements LlmService {
       }
       request.setKnowledgeSnippets(snippets);
 
-      String baseInstruction = "璇蜂紭鍏堝弬鑰冩绱㈠埌鐨勭煡璇嗙墖娈佃繘琛屽洖绛旓紝寮曠敤鏃朵娇鐢ㄣ€?缂栧彿銆戞牸寮?;
+      String baseInstruction = "请优先参考检索到的知识片段进行回答，必要时附上引用编号与来源。";
       if (request.getSystemPrompt() != null && !request.getSystemPrompt().isBlank()) {
-        request.setSystemPrompt(request.getSystemPrompt() + "
-
-" + baseInstruction);
+        request.setSystemPrompt(request.getSystemPrompt() + " " + baseInstruction);
       } else {
         request.setSystemPrompt(baseInstruction);
       }
@@ -781,19 +780,15 @@ public class LlmServiceImpl implements LlmService {
 
   private String buildKnowledgePrompt(List<KnowledgeSearchResponse.Item> results, boolean appendCitations) {
     StringBuilder sb = new StringBuilder();
-    sb.append("鐭ヨ瘑妫€绱㈢粨鏋?
-");
+    sb.append("知识检索结果： ");
     for (int i = 0; i < results.size(); i++) {
       KnowledgeSearchResponse.Item item = results.get(i);
       String title = item.getTitle() != null ? item.getTitle() : "Untitled";
-      sb.append("銆?").append(i + 1).append("銆?").append(title).append("
-");
-      sb.append(item.getContent()).append("
-
-");
+      sb.append("【").append(i + 1).append("】").append(title).append(" ");
+      sb.append(item.getContent()).append(" ");
     }
     if (appendCitations) {
-      sb.append("鍥炵瓟鏃惰寮曠敤瀵瑰簲鐨勩€?缂栧彿銆戙€?);
+      sb.append("回答时请引用对应的【编号】与来源。");
     }
     return sb.toString();
   }
@@ -803,18 +798,14 @@ public class LlmServiceImpl implements LlmService {
       return "";
     }
     StringBuilder sb = new StringBuilder();
-    sb.append("
-
-鍙傝€冭祫鏂?
-");
+    sb.append("参考资料： ");
     for (int i = 0; i < snippets.size(); i++) {
       ChatRequest.KnowledgeSnippet snippet = snippets.get(i);
-      sb.append("銆?").append(i + 1).append("銆?).append(snippet.getTitle());
+      sb.append("【").append(i + 1).append("】").append(snippet.getTitle());
       if (snippet.getCitation() != null) {
         sb.append(" - ").append(snippet.getCitation());
       }
-      sb.append("
-");
+      sb.append("\n");
     }
     return sb.toString();
   }

@@ -6,12 +6,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Schema(description = "鍒嗙被鍒楄〃鍝嶅簲")
+@Schema(description = "分类列表响应")
 public class CategoryListResponse {
-    
-    @Schema(description = "鍒嗙被鍒楄〃")
+
+    @Schema(description = "分类列表")
     private List<CategoryResponse> categories;
-    
-    @Schema(description = "鎬绘暟閲?)
+
+    @Schema(description = "总数量")
     private Long totalCount;
 }

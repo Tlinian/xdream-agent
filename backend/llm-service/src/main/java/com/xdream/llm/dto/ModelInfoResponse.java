@@ -5,78 +5,78 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-@Schema(description = "妯″瀷淇℃伅鍝嶅簲")
+@Schema(description = "模型信息响应")
 public class ModelInfoResponse {
 
-  @Schema(description = "妯″瀷ID", example = "gpt-3.5-turbo")
+  @Schema(description = "模型ID", example = "gpt-3.5-turbo")
   private String id;
 
-  @Schema(description = "妯″瀷鍚嶇О", example = "GPT-3.5 Turbo")
+  @Schema(description = "模型名称", example = "GPT-3.5 Turbo")
   private String name;
 
-  @Schema(description = "妯″瀷绫诲瀷", example = "chat")
+  @Schema(description = "模型类型", example = "chat")
   private String type;
 
-  @Schema(description = "妯″瀷鎻忚堪", example = "OpenAI GPT-3.5 Turbo妯″瀷")
+  @Schema(description = "模型描述", example = "OpenAI GPT-3.5 Turbo模型")
   private String description;
 
-  @Schema(description = "鏄惁鍙敤", example = "true")
+  @Schema(description = "是否可用", example = "true")
   private Boolean available;
 
-  @Schema(description = "鏈€澶oken鏁?, example = "4096")
+  @Schema(description = "最大token数", example = "4096")
   private Integer maxTokens;
 
-  @Schema(description = "涓婁笅鏂囬暱搴?, example = "4096")
+  @Schema(description = "上下文长度", example = "4096")
   private Integer contextLength;
 
-  @Schema(description = "璁粌鏁版嵁鎴鏃堕棿", example = "2023-09")
+  @Schema(description = "训练数据截止时间", example = "2023-09")
   private String trainingDataCutoff;
 
-  @Schema(description = "鏀寔鐨勫弬鏁?)
+  @Schema(description = "支持的参数")
   private SupportedParameters supportedParameters;
 
-  @Schema(description = "浠锋牸淇℃伅")
+  @Schema(description = "价格信息")
   private Pricing pricing;
 
-  @Schema(description = "鍒涘缓鏃堕棿")
+  @Schema(description = "创建时间")
   private LocalDateTime createdAt;
 
-  @Schema(description = "鏇存柊鏃堕棿")
+  @Schema(description = "更新时间")
   private LocalDateTime updatedAt;
 
   @Data
   public static class SupportedParameters {
-    @Schema(description = "鏀寔娓╁害鍙傛暟", example = "true")
+    @Schema(description = "支持温度参数", example = "true")
     private Boolean temperature;
 
-    @Schema(description = "鏀寔top_p鍙傛暟", example = "true")
+    @Schema(description = "支持top_p参数", example = "true")
     private Boolean topP;
 
-    @Schema(description = "鏀寔棰戠巼鎯╃綒", example = "true")
+    @Schema(description = "支持频率惩罚", example = "true")
     private Boolean frequencyPenalty;
 
-    @Schema(description = "鏀寔瀛樺湪鎯╃綒", example = "true")
+    @Schema(description = "支持存在惩罚", example = "true")
     private Boolean presencePenalty;
 
-    @Schema(description = "鏀寔鏈€澶oken鏁?, example = "true")
+    @Schema(description = "支持最大token数", example = "true")
     private Boolean maxTokens;
 
-    @Schema(description = "鏀寔娴佸紡鍝嶅簲", example = "true")
+    @Schema(description = "支持流式响应", example = "true")
     private Boolean stream;
   }
 
   @Data
   public static class Pricing {
-    @Schema(description = "杈撳叆浠锋牸锛堟瘡1K tokens锛?, example = "0.0015")
+    @Schema(description = "输入价格（每1K tokens）", example = "0.0015")
     private Double inputPrice;
 
-    @Schema(description = "杈撳嚭浠锋牸锛堟瘡1K tokens锛?, example = "0.002")
+    @Schema(description = "输出价格（每1K tokens）", example = "0.002")
     private Double outputPrice;
 
-    @Schema(description = "璐у竵鍗曚綅", example = "USD")
+    @Schema(description = "货币单位", example = "USD")
     private String currency;
 
-    @Schema(description = "璁¤垂鏂瑰紡", example = "per_token")
+    @Schema(description = "计费方式", example = "per_token")
     private String billingMethod;
   }
 }

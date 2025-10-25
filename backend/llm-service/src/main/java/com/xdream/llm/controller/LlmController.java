@@ -75,7 +75,7 @@ public class LlmController {
 
 
   @PostMapping("/rerank")
-  @Operation(summary = "閲嶆帓搴?, description = "璋冪敤閲嶆帓搴忔ā鍨嬪鍊欓€夋枃鏈繘琛屾墦鍒?)
+  @Operation(summary = "重排序", description = "调用重排序模型对候选文本进行打分")
   public ResponseEntity<ApiResponse<RerankResponse>> rerank(
       @RequestHeader("X-User-Id") String userId,
       @Valid @RequestBody RerankRequest request) {

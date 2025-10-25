@@ -18,7 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * 鍩轰簬 PostgreSQL + pgvector 鐨勫悜閲忓瓨鍌ㄦ搷浣溿€?
+ * 基于 PostgreSQL + pgvector 的向量存储操作。
  */
 @Slf4j
 @Component
@@ -37,7 +37,7 @@ public class KnowledgeVectorStore {
             String dbName = metaData.getDatabaseProductName();
             this.vectorEnabled = dbName != null && dbName.toLowerCase().contains("postgresql");
             if (vectorEnabled) {
-                log.info("妫€娴嬪埌 PostgreSQL锛屽皾璇曞垵濮嬪寲 pgvector 鎵╁睍");
+                log.info("检测到 PostgreSQL，初始化 pgvector 扩展与向量存储表");
                 jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
                 jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS knowledge_segments (" +
                         "id VARCHAR(64) PRIMARY KEY," +
@@ -55,23 +55,23 @@ public class KnowledgeVectorStore {
                 try {
                     jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS idx_kn_segments_vector ON knowledge_segments USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)");
                 } catch (Exception indexEx) {
-                    log.warn("鍒涘缓鍚戦噺绱㈠紩澶辫触锛屽彲鎵嬪姩鍒涘缓 ivfflat 绱㈠紩: {}", indexEx.getMessage());
+                    log.warn("创建向量索引失败，可手动创建 ivfflat 索引: {}", indexEx.getMessage());
                 }
             } else {
-                log.warn("褰撳墠鏁版嵁搴撻潪 PostgreSQL锛岀煡璇嗗簱鍚戦噺妫€绱㈠姛鑳藉皢涓嶅彲鐢?);
+                log.warn("当前数据库非 PostgreSQL，知识库向量检索功能将不可用");
             }
         } catch (SQLException ex) {
-            log.error("妫€娴嬫暟鎹簱绫诲瀷澶辫触锛岀煡璇嗗簱鍚戦噺妫€绱㈠彲鑳戒笉鍙敤", ex);
+            log.error("检查数据库类型失败，知识库向量检索可能不可用", ex);
             this.vectorEnabled = false;
         }
     }
 
     /**
-     * 鎵归噺鍐欏叆鍚戦噺鍒囩墖銆?
+     * 批量写入向量分片。
      */
     public void saveSegments(List<KnowledgeSegmentRecord> segments) {
         if (!vectorEnabled) {
-            log.warn("鏈惎鐢ㄥ悜閲忔绱紝璺宠繃鍚戦噺鍐欏叆");
+            log.warn("未启用向量检索，跳过向量写入");
             return;
         }
         if (segments == null || segments.isEmpty()) {
@@ -103,7 +103,7 @@ public class KnowledgeVectorStore {
     }
 
     /**
-     * 鏍规嵁鏂囨。 ID 鍒犻櫎宸叉湁鍒囩墖銆?
+     * 根据文档 ID 删除已有分片。
      */
     public void deleteByDocumentId(String documentId) {
         if (!vectorEnabled) {
@@ -113,7 +113,7 @@ public class KnowledgeVectorStore {
     }
 
     /**
-     * 鎵ц鍚戦噺鐩镐技搴︽绱€?
+     * 执行向量相似度检索。
      */
     public List<KnowledgeSegmentRecord> search(String knowledgeBaseId, float[] queryEmbedding, int topK) {
         if (!vectorEnabled) {
@@ -121,7 +121,12 @@ public class KnowledgeVectorStore {
         }
         String sql = "SELECT id, document_id, chunk_index, content, token_count, 1 - (embedding <=> ?) AS similarity " +
                 "FROM knowledge_segments WHERE knowledge_base_id = ? ORDER BY embedding <=> ? ASC LIMIT ?";
-        PGobject vector = createPgVector(queryEmbedding);
+        PGobject vector;
+        try {
+            vector = createPgVector(queryEmbedding);
+        } catch (SQLException e) {
+            throw new RuntimeException("构建向量对象失败", e);
+        }
         return jdbcTemplate.query(sql, ps -> {
             ps.setObject(1, vector);
             ps.setString(2, knowledgeBaseId);
@@ -145,7 +150,7 @@ public class KnowledgeVectorStore {
         return vectorEnabled;
     }
     /**
-     * 缁熻鎸囧畾鐭ヨ瘑搴撶殑鍚戦噺鏁伴噺銆?
+     * 统计指定知识库的向量数量。
      */
     public long countByKnowledgeBaseId(String knowledgeBaseId) {
         if (!vectorEnabled) {
@@ -160,7 +165,7 @@ public class KnowledgeVectorStore {
     }
 
     /**
-     * 缁熻鏌愪釜鏂囨。鐨勫垏鐗囨暟閲忋€?
+     * 统计某个文档的分片数量。
      */
     public long countByDocumentId(String documentId) {
         if (!vectorEnabled) {
@@ -172,6 +177,7 @@ public class KnowledgeVectorStore {
                 documentId
         );
         return count == null ? 0L : count;
+    }
     
     private PGobject createPgVector(float[] embedding) throws SQLException {
         if (embedding == null) {
@@ -187,7 +193,7 @@ public class KnowledgeVectorStore {
         }
         sb.append(']');
         PGobject vector = new PGobject();
-        vector.setType('vector');
+        vector.setType("vector");
         vector.setValue(sb.toString());
         return vector;
     }

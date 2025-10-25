@@ -8,84 +8,84 @@ import java.util.Map;
 import lombok.Data;
 
 @Data
-@Schema(description = "浣跨敤鎯呭喌鍝嶅簲")
+@Schema(description = "使用情况响应")
 public class UsageResponse {
 
-  @Schema(description = "鐢ㄦ埛ID")
+  @Schema(description = "用户ID")
   private String userId;
 
-  @Schema(description = "缁熻寮€濮嬫棩鏈?)
+  @Schema(description = "统计开始日期")
   private LocalDate startDate;
 
-  @Schema(description = "缁熻缁撴潫鏃ユ湡")
+  @Schema(description = "统计结束日期")
   private LocalDate endDate;
 
-  @Schema(description = "鎬讳娇鐢ㄦ儏鍐?)
+  @Schema(description = "总使用情况")
   private UsageSummary totalUsage;
 
-  @Schema(description = "鍚勬ā鍨嬩娇鐢ㄦ儏鍐?)
+  @Schema(description = "各模型使用情况")
   private Map<String, ModelUsage> modelUsage;
 
-  @Schema(description = "姣忔棩浣跨敤鎯呭喌")
+  @Schema(description = "每日使用情况")
   private List<DailyUsage> dailyUsage;
 
-  @Schema(description = "鍝嶅簲鏃堕棿")
+  @Schema(description = "响应时间")
   private LocalDateTime responseTime;
 
   @Data
   public static class UsageSummary {
-    @Schema(description = "鎬昏姹傛暟", example = "100")
+    @Schema(description = "总请求数", example = "100")
     private Integer totalRequests;
 
-    @Schema(description = "鎬籺oken浣跨敤閲?, example = "50000")
+    @Schema(description = "总token使用量", example = "50000")
     private Integer totalTokens;
 
-    @Schema(description = "鎬昏緭鍏oken鏁?, example = "30000")
+    @Schema(description = "总输入token数", example = "30000")
     private Integer totalInputTokens;
 
-    @Schema(description = "鎬昏緭鍑簍oken鏁?, example = "20000")
+    @Schema(description = "总输出token数", example = "20000")
     private Integer totalOutputTokens;
 
-    @Schema(description = "鎬昏垂鐢紙USD锛?, example = "0.15")
+    @Schema(description = "总费用（USD）", example = "0.15")
     private Double totalCost;
 
-    @Schema(description = "骞冲潎鍝嶅簲鏃堕棿锛堟绉掞級", example = "1200")
+    @Schema(description = "平均响应时间（毫秒）", example = "1200")
     private Double averageResponseTime;
   }
 
   @Data
   public static class ModelUsage {
-    @Schema(description = "妯″瀷鍚嶇О", example = "gpt-3.5-turbo")
+    @Schema(description = "模型名称", example = "gpt-3.5-turbo")
     private String modelName;
 
-    @Schema(description = "璇锋眰鏁?, example = "50")
+    @Schema(description = "请求数", example = "50")
     private Integer requestCount;
 
-    @Schema(description = "token浣跨敤閲?, example = "25000")
+    @Schema(description = "token使用量", example = "25000")
     private Integer tokenUsage;
 
-    @Schema(description = "杈撳叆token鏁?, example = "15000")
+    @Schema(description = "输入token数", example = "15000")
     private Integer inputTokens;
 
-    @Schema(description = "杈撳嚭token鏁?, example = "10000")
+    @Schema(description = "输出token数", example = "10000")
     private Integer outputTokens;
 
-    @Schema(description = "璐圭敤锛圲SD锛?, example = "0.075")
+    @Schema(description = "费用（USD）", example = "0.075")
     private Double cost;
   }
 
   @Data
   public static class DailyUsage {
-    @Schema(description = "鏃ユ湡")
+    @Schema(description = "日期")
     private LocalDate date;
 
-    @Schema(description = "璇锋眰鏁?, example = "10")
+    @Schema(description = "请求数", example = "10")
     private Integer requests;
 
-    @Schema(description = "token浣跨敤閲?, example = "5000")
+    @Schema(description = "token使用量", example = "5000")
     private Integer tokens;
 
-    @Schema(description = "璐圭敤锛圲SD锛?, example = "0.015")
+    @Schema(description = "费用（USD）", example = "0.015")
     private Double cost;
   }
 }

@@ -27,48 +27,48 @@ public class BaseLlmClient {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  /** 璋冪敤SiliconFlow API杩涜闈炴祦寮忓璇?*/
+  /** 调用SiliconFlow API进行非流式对话 */
   public ChatResponse chat(String userId, ChatRequest request) {
-    // TODO锛氱洰鍓嶄粎鏀寔浠庨厤缃枃浠惰鍙栨ā鍨嬶紝鍚庣画寮勬垚浠庤姹傚弬鏁颁腑璇诲彇
+    // TODO：目前仅支持从配置文件读取模型，后续弄成从请求参数中读取
     log.info("user: {}, model: {}", userId, llmProperties.getChat().getModel());
 
     try {
-      // 鏋勫缓璇锋眰浣?
+      // 构建请求体
       Map<String, Object> requestBody =
-          buildRequestBody(
-              request,
-              llmProperties.getChat().getModel(),
-              llmProperties.getChat().getMaxTokens(),
-              false);
+              buildRequestBody(
+                      request,
+                      llmProperties.getChat().getModel(),
+                      llmProperties.getChat().getMaxTokens(),
+                      false);
 
-      // 璁剧疆璇锋眰澶?
+      // 设置请求头
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("Authorization", "Bearer " + llmProperties.getChat().getApiKey());
 
       HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-      // 璋冪敤SiliconFlow API
+      // 调用SiliconFlow API
       String apiUrl =
-          llmProperties.getChat().getBaseUrl() + llmProperties.getChat().getInterfaceUrl();
+              llmProperties.getChat().getBaseUrl() + llmProperties.getChat().getInterfaceUrl();
       log.debug("API: {}", apiUrl);
 
       ResponseEntity<Map> response =
-          restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
+              restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
 
       if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
         return parseResponse(response.getBody(), llmProperties.getChat().getModel());
       } else {
-        throw new RuntimeException("API璋冪敤澶辫触锛岀姸鎬佺爜: " + response.getStatusCode());
+        throw new RuntimeException("API调用失败，状态码: " + response.getStatusCode());
       }
 
     } catch (Exception e) {
-      log.error("API璋冪敤澶辫触", e);
-      throw new RuntimeException("AI鏈嶅姟璋冪敤澶辫触: " + e.getMessage(), e);
+      log.error("API调用失败", e);
+      throw new RuntimeException("AI服务调用失败: " + e.getMessage(), e);
     }
   }
 
-  /** 璋冪敤SiliconFlow API杩涜娴佸紡瀵硅瘽 */
+  /** 调用SiliconFlow API进行流式对话 */
   public Flux<StreamResponse> streamChat(String userId, ChatRequest request) {
     String modelType = llmProperties.getChat().getModel();
     log.info("user: {}, model: {}", userId, modelType);
@@ -76,171 +76,171 @@ public class BaseLlmClient {
     Sinks.Many<StreamResponse> sink = Sinks.many().unicast().onBackpressureBuffer();
     String streamId = UUID.randomUUID().toString();
 
-    // 鍦ㄥ崟鐙殑绾跨▼涓鐞咹TTP杩炴帴鍜屾祦寮忓搷搴?
+    // 在单独的线程中处理HTTP连接和流式响应
     Schedulers.boundedElastic()
-        .schedule(
-            () -> {
-              HttpURLConnection connection = null;
-              BufferedReader reader = null;
+            .schedule(
+                    () -> {
+                      HttpURLConnection connection = null;
+                      BufferedReader reader = null;
 
-              try {
-                // 鏋勫缓璇锋眰浣?
-                Map<String, Object> requestBody =
-                    buildRequestBody(
-                        request,
-                        modelType,
-                        llmProperties.getChat().getMaxTokens(),
-                        true);
+                      try {
+                        // 构建请求体
+                        Map<String, Object> requestBody =
+                                buildRequestBody(
+                                        request,
+                                        modelType,
+                                        llmProperties.getChat().getMaxTokens(),
+                                        true);
 
-                String requestBodyJson = objectMapper.writeValueAsString(requestBody);
-                log.info("Request body: {}", requestBodyJson);
-                log.info("API URL: {}", llmProperties.getChat().getBaseUrl() + llmProperties.getChat().getInterfaceUrl());
-                log.info("Model: {}", modelType);
+                        String requestBodyJson = objectMapper.writeValueAsString(requestBody);
+                        log.info("Request body: {}", requestBodyJson);
+                        log.info("API URL: {}", llmProperties.getChat().getBaseUrl() + llmProperties.getChat().getInterfaceUrl());
+                        log.info("Model: {}", modelType);
 
-                // 鍒涘缓杩炴帴
-                String apiUrl =
-                    llmProperties.getChat().getBaseUrl()
-                        + llmProperties.getChat().getInterfaceUrl();
-                log.info("Calling API URL: {} with model: {}", apiUrl, modelType);
-                log.info("API Key: {}", llmProperties.getChat().getApiKey() != null ? "Present" : "Missing");
-                URL url = new URL(apiUrl);
-                connection = (HttpURLConnection) url.openConnection();
+                        // 创建连接
+                        String apiUrl =
+                                llmProperties.getChat().getBaseUrl()
+                                        + llmProperties.getChat().getInterfaceUrl();
+                        log.info("Calling API URL: {} with model: {}", apiUrl, modelType);
+                        log.info("API Key: {}", llmProperties.getChat().getApiKey() != null ? "Present" : "Missing");
+                        URL url = new URL(apiUrl);
+                        connection = (HttpURLConnection) url.openConnection();
 
-                // 璁剧疆璇锋眰灞炴€?
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty(
-                    "Authorization", "Bearer " + llmProperties.getChat().getApiKey());
-                connection.setDoOutput(true);
-                connection.setConnectTimeout(llmProperties.getChat().getTimeout());
-                connection.setReadTimeout(llmProperties.getChat().getTimeout());
+                        // 设置请求属性
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json");
+                        connection.setRequestProperty(
+                                "Authorization", "Bearer " + llmProperties.getChat().getApiKey());
+                        connection.setDoOutput(true);
+                        connection.setConnectTimeout(llmProperties.getChat().getTimeout());
+                        connection.setReadTimeout(llmProperties.getChat().getTimeout());
 
-                // 鍙戦€佽姹備綋
-                try (var outputStream = connection.getOutputStream()) {
-                  byte[] input = requestBodyJson.getBytes(StandardCharsets.UTF_8);
-                  outputStream.write(input, 0, input.length);
-                }
+                        // 发送请求体
+                        try (var outputStream = connection.getOutputStream()) {
+                          byte[] input = requestBodyJson.getBytes(StandardCharsets.UTF_8);
+                          outputStream.write(input, 0, input.length);
+                        }
 
-                // 妫€鏌ュ搷搴旂姸鎬?
-                int responseCode = connection.getResponseCode();
-                log.info("Response code: {}", responseCode);
-                if (responseCode != HttpURLConnection.HTTP_OK) {
-                  // 璇诲彇閿欒鍝嶅簲鍐呭
-                  String errorResponse = "";
-                  try (BufferedReader errorReader = new BufferedReader(
-                      new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder errorBuffer = new StringBuilder();
-                    String errorLine;
-                    while ((errorLine = errorReader.readLine()) != null) {
-                      errorBuffer.append(errorLine);
-                    }
-                    errorResponse = errorBuffer.toString();
-                  } catch (Exception readError) {
-                    log.error("Failed to read error response", readError);
-                  }
-                  log.error("API璋冪敤澶辫触锛岀姸鎬佺爜: {}, 閿欒鍝嶅簲: {}", responseCode, errorResponse);
-                  throw new RuntimeException("API璋冪敤澶辫触锛岀姸鎬佺爜: " + responseCode + ", 閿欒: " + errorResponse);
-                }
+                        // 检查响应状态
+                        int responseCode = connection.getResponseCode();
+                        log.info("Response code: {}", responseCode);
+                        if (responseCode != HttpURLConnection.HTTP_OK) {
+                          // 读取错误响应内容
+                          String errorResponse = "";
+                          try (BufferedReader errorReader = new BufferedReader(
+                                  new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+                            StringBuilder errorBuffer = new StringBuilder();
+                            String errorLine;
+                            while ((errorLine = errorReader.readLine()) != null) {
+                              errorBuffer.append(errorLine);
+                            }
+                            errorResponse = errorBuffer.toString();
+                          } catch (Exception readError) {
+                            log.error("Failed to read error response", readError);
+                          }
+                          log.error("API调用失败，状态码: {}, 错误响应: {}", responseCode, errorResponse);
+                          throw new RuntimeException("API调用失败，状态码: " + responseCode + ", 错误: " + errorResponse);
+                        }
 
-                // 璇诲彇娴佸紡鍝嶅簲
-                reader =
-                    new BufferedReader(
-                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                        // 读取流式响应
+                        reader =
+                                new BufferedReader(
+                                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
-                String line;
-                StringBuilder buffer = new StringBuilder();
+                        String line;
+                        StringBuilder buffer = new StringBuilder();
 
-                while ((line = reader.readLine()) != null) {
-                  if (line.isEmpty() || line.equals("data: [DONE]")) {
-                    continue;
-                  }
+                        while ((line = reader.readLine()) != null) {
+                          if (line.isEmpty() || line.equals("data: [DONE]")) {
+                            continue;
+                          }
 
-                  if (line.startsWith("data: ")) {
-                    buffer.append(line.substring(6));
+                          if (line.startsWith("data: ")) {
+                            buffer.append(line.substring(6));
 
-                    try {
-                      // 灏濊瘯瑙ｆ瀽JSON
-                      Map<String, Object> chunk =
-                          objectMapper.readValue(buffer.toString(), Map.class);
+                            try {
+                              // 尝试解析JSON
+                              Map<String, Object> chunk =
+                                      objectMapper.readValue(buffer.toString(), Map.class);
 
-                      // 鎻愬彇鍐呭
-                      if (chunk.containsKey("choices") && chunk.get("choices") instanceof List) {
-                        List<Map<String, Object>> choices =
-                            (List<Map<String, Object>>) chunk.get("choices");
-                        if (!choices.isEmpty() && choices.get(0).containsKey("delta")) {
-                          Map<String, Object> delta =
-                              (Map<String, Object>) choices.get(0).get("delta");
-                          if (delta.containsKey("content")) {
-                            String content = (String) delta.get("content");
+                              // 提取内容
+                              if (chunk.containsKey("choices") && chunk.get("choices") instanceof List) {
+                                List<Map<String, Object>> choices =
+                                        (List<Map<String, Object>>) chunk.get("choices");
+                                if (!choices.isEmpty() && choices.get(0).containsKey("delta")) {
+                                  Map<String, Object> delta =
+                                          (Map<String, Object>) choices.get(0).get("delta");
+                                  if (delta.containsKey("content")) {
+                                    String content = (String) delta.get("content");
 
-                            StreamResponse streamChunk = StreamResponse.builder()
-                                    .streamId(streamId)
-                                    .modelType(modelType)
-                                    .content(content)
-                                    .finished(false)
-                                    .build();
-                            sink.tryEmitNext(streamChunk);
+                                    StreamResponse streamChunk = StreamResponse.builder()
+                                            .streamId(streamId)
+                                            .modelType(modelType)
+                                            .content(content)
+                                            .finished(false)
+                                            .build();
+                                    sink.tryEmitNext(streamChunk);
+                                  }
+                                }
+
+                                // 检查是否完成
+                                if (!choices.isEmpty() && choices.get(0).containsKey("finish_reason")) {
+                                  String finishReason = (String) choices.get(0).get("finish_reason");
+                                  if (finishReason != null) {
+                                    StreamResponse finalChunk = StreamResponse.builder()
+                                            .streamId(streamId)
+                                            .modelType(modelType)
+                                            .content("")
+                                            .finished(true)
+                                            .finishReason(finishReason)
+                                            .tokenUsage(estimateTokenUsage(request.getMessage(), ""))
+                                            .build();
+                                    sink.tryEmitNext(finalChunk);
+                                    break;
+                                  }
+                                }
+                              }
+
+                              // 清空缓冲区
+                              buffer.setLength(0);
+                            } catch (Exception e) {
+                              // 如果解析失败，继续累积数据
+                              log.debug("Failed to parse chunk, continuing: {}", e.getMessage());
+                            }
                           }
                         }
 
-                        // 妫€鏌ユ槸鍚﹀畬鎴?
-                        if (!choices.isEmpty() && choices.get(0).containsKey("finish_reason")) {
-                          String finishReason = (String) choices.get(0).get("finish_reason");
-                          if (finishReason != null) {
-                            StreamResponse finalChunk = StreamResponse.builder()
-                                    .streamId(streamId)
-                                    .modelType(modelType)
-                                    .content("")
-                                    .finished(true)
-                                    .finishReason(finishReason)
-                                    .tokenUsage(estimateTokenUsage(request.getMessage(), ""))
-                                    .build();
-                            sink.tryEmitNext(finalChunk);
-                            break;
+                        sink.tryEmitComplete();
+                        log.info("API streaming chat completed for user: {}", userId);
+
+                      } catch (Exception e) {
+                        log.error("API streaming call failed", e);
+                        sink.tryEmitError(new RuntimeException("AI服务流式调用失败: " + e.getMessage(), e));
+                      } finally {
+                        if (reader != null) {
+                          try {
+                            reader.close();
+                          } catch (Exception e) {
                           }
+                        }
+                        if (connection != null) {
+                          connection.disconnect();
                         }
                       }
-
-                      // 娓呯┖缂撳啿鍖?
-                      buffer.setLength(0);
-                    } catch (Exception e) {
-                      // 濡傛灉瑙ｆ瀽澶辫触锛岀户缁疮绉暟鎹?
-                      log.debug("Failed to parse chunk, continuing: {}", e.getMessage());
-                    }
-                  }
-                }
-
-                sink.tryEmitComplete();
-                log.info("API streaming chat completed for user: {}", userId);
-
-              } catch (Exception e) {
-                log.error("API streaming call failed", e);
-                sink.tryEmitError(new RuntimeException("AI鏈嶅姟娴佸紡璋冪敤澶辫触: " + e.getMessage(), e));
-              } finally {
-                if (reader != null) {
-                  try {
-                    reader.close();
-                  } catch (Exception e) {
-                  }
-                }
-                if (connection != null) {
-                  connection.disconnect();
-                }
-              }
-            });
+                    });
 
     return sink.asFlux();
   }
 
-  /** 璋冪敤API鐢熸垚鍥剧墖 */
+  /** 调用API生成图片 */
   public ImageGenerationResponse generateImage(String userId, ImageGenerationRequest request) {
     log.info(
-        "Calling API for image generation: user={}, model={}",
-        userId,
-        llmProperties.getTextToImage().getModel());
+            "Calling API for image generation: user={}, model={}",
+            userId,
+            llmProperties.getTextToImage().getModel());
 
     try {
-      // 鏋勫缓璇锋眰浣?
+      // 构建请求体
       Map<String, Object> requestBody = new HashMap<>();
       requestBody.put("model", llmProperties.getTextToImage().getModel());
       requestBody.put("prompt", request.getPrompt());
@@ -252,45 +252,45 @@ public class BaseLlmClient {
         requestBody.put("user", request.getUser());
       }
 
-      // 璁剧疆璇锋眰澶?
+      // 设置请求头
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      // 浣跨敤鐢ㄦ埛鎻愪緵鐨則oken
+      // 使用用户提供的token
       headers.set("Authorization", "Bearer " + llmProperties.getTextToImage().getApiKey());
 
       HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-      // 璋冪敤鍥剧墖鐢熸垚API
+      // 调用图片生成API
       String apiUrl =
-          llmProperties.getTextToImage().getBaseUrl()
-              + llmProperties.getTextToImage().getInterfaceUrl();
+              llmProperties.getTextToImage().getBaseUrl()
+                      + llmProperties.getTextToImage().getInterfaceUrl();
       log.debug("Calling TextToImage image generation API: {}", apiUrl);
 
       ResponseEntity<Map> response =
-          restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
+              restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
 
       if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
         return parseImageResponse(response.getBody(), llmProperties.getTextToImage().getModel());
       } else {
-        throw new RuntimeException("TextToImage image API璋冪敤澶辫触锛岀姸鎬佺爜: " + response.getStatusCode());
+        throw new RuntimeException("TextToImage image API调用失败，状态码: " + response.getStatusCode());
       }
 
     } catch (Exception e) {
-      log.error("TextToImage image API璋冪敤澶辫触", e);
-      throw new RuntimeException("鍥剧墖鐢熸垚鏈嶅姟璋冪敤澶辫触: " + e.getMessage(), e);
+      log.error("TextToImage image API调用失败", e);
+      throw new RuntimeException("图片生成服务调用失败: " + e.getMessage(), e);
     }
   }
 
-  /** 瑙ｆ瀽鍥剧墖API鍝嶅簲 */
+  /** 解析图片API响应 */
   private ImageGenerationResponse parseImageResponse(
-      Map<String, Object> responseBody, String modelType) {
+          Map<String, Object> responseBody, String modelType) {
     ImageGenerationResponse response = new ImageGenerationResponse();
     response.setId(UUID.randomUUID().toString());
     response.setModelType(modelType);
     response.setCreatedAt(LocalDateTime.now());
 
     try {
-      // 瑙ｆ瀽images鏁扮粍
+      // 解析images数组
       List<Map<String, Object>> images = (List<Map<String, Object>>) responseBody.get("data");
       if (images != null && !images.isEmpty()) {
         List<ImageGenerationResponse.ImageData> imageDataList = new ArrayList<>();
@@ -317,33 +317,33 @@ public class BaseLlmClient {
       }
 
     } catch (Exception e) {
-      log.error("瑙ｆ瀽SiliconFlow鍥剧墖鍝嶅簲澶辫触", e);
-      throw new RuntimeException("鍥剧墖鍝嶅簲瑙ｆ瀽澶辫触", e);
+      log.error("解析SiliconFlow图片响应失败", e);
+      throw new RuntimeException("图片响应解析失败", e);
     }
 
     return response;
   }
 
-  /** 浼扮畻token浣跨敤閲?*/
+  /** 估算token使用量 */
   private int estimateTokenUsage(String prompt, String completion) {
-    // 绠€鍗曠殑token浼扮畻閫昏緫
+    // 简单的token估算逻辑
     int promptTokens = prompt == null ? 0 : prompt.length() / 4;
     int completionTokens = completion == null ? 0 : completion.length() / 4;
     return promptTokens + completionTokens;
   }
 
-  /** 鏋勫缓璇锋眰浣?*/
+  /** 构建请求体 */
   private Map<String, Object> buildRequestBody(
-      ChatRequest request, String modelType, int maxTokens, boolean stream) {
+          ChatRequest request, String modelType, int maxTokens, boolean stream) {
     Map<String, Object> requestBody = new HashMap<>();
 
-    // 璁剧疆妯″瀷
+    // 设置模型
     requestBody.put("model", modelType != null ? modelType : llmProperties.getChat().getModel());
 
-    // 鏋勫缓娑堟伅鍒楄〃
+    // 构建消息列表
     List<Map<String, String>> messages = new ArrayList<>();
 
-    // 娣诲姞绯荤粺娑堟伅锛堝鏋滄湁锛?
+    // 添加系统消息（如果有）
     if (request.getSystemPrompt() != null && !request.getSystemPrompt().isEmpty()) {
       Map<String, String> systemMessage = new HashMap<>();
       systemMessage.put("role", "system");
@@ -351,7 +351,7 @@ public class BaseLlmClient {
       messages.add(systemMessage);
     }
 
-    // 娣诲姞鐢ㄦ埛娑堟伅
+    // 添加用户消息
     Map<String, String> userMessage = new HashMap<>();
     userMessage.put("role", "user");
     userMessage.put("content", request.getMessage());
@@ -359,11 +359,11 @@ public class BaseLlmClient {
 
     requestBody.put("messages", messages);
 
-    // 璁剧疆鍙傛暟
+    // 设置参数
     requestBody.put(
-        "max_tokens", request.getMaxTokens() != null ? request.getMaxTokens() : maxTokens);
+            "max_tokens", request.getMaxTokens() != null ? request.getMaxTokens() : maxTokens);
     requestBody.put(
-        "temperature", request.getTemperature() != null ? request.getTemperature() : 0.7);
+            "temperature", request.getTemperature() != null ? request.getTemperature() : 0.7);
 
     if (request.getTopP() != null) {
       requestBody.put("top_p", request.getTopP());
@@ -375,13 +375,13 @@ public class BaseLlmClient {
       requestBody.put("presence_penalty", request.getPresencePenalty());
     }
 
-    // 璁剧疆娴佸紡鍝嶅簲
+    // 设置流式响应
     requestBody.put("stream", stream);
 
     return requestBody;
   }
 
-  /** 瑙ｆ瀽API鍝嶅簲 */
+  /** 解析API响应 */
   private ChatResponse parseResponse(Map<String, Object> responseBody, String modelType) {
     ChatResponse response = new ChatResponse();
     response.setId(UUID.randomUUID().toString());
@@ -390,7 +390,7 @@ public class BaseLlmClient {
     response.setResponseTime(LocalDateTime.now());
 
     try {
-      // 瑙ｆ瀽choices
+      // 解析choices
       List<Map<String, Object>> choices = (List<Map<String, Object>>) responseBody.get("choices");
       if (choices != null && !choices.isEmpty()) {
         Map<String, Object> choice = choices.get(0);
@@ -405,7 +405,7 @@ public class BaseLlmClient {
         response.setFinishReason(finishReason);
       }
 
-      // 瑙ｆ瀽usage
+      // 解析usage
       Map<String, Object> usage = (Map<String, Object>) responseBody.get("usage");
       if (usage != null) {
         Integer promptTokens = (Integer) usage.get("prompt_tokens");
@@ -418,12 +418,13 @@ public class BaseLlmClient {
       }
 
     } catch (Exception e) {
-      log.error("瑙ｆ瀽鍝嶅簲澶辫触", e);
-      throw new RuntimeException("AI鍝嶅簲瑙ｆ瀽澶辫触", e);
+      log.error("解析响应失败", e);
+      throw new RuntimeException("AI响应解析失败", e);
     }
 
     return response;
-  
+  }
+
   public EmbeddingResponse generateEmbeddingsFromApi(String userId, EmbeddingRequest request) {
     LlmProperties.EmbeddingProperties config = llmProperties.getEmbedding();
     String model = request.getModelType() != null ? request.getModelType() : config.getModel();
@@ -544,5 +545,4 @@ public class BaseLlmClient {
     }
     return response;
   }
-
 }

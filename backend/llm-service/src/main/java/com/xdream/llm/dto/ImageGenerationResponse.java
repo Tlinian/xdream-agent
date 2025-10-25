@@ -8,18 +8,18 @@ import lombok.Data;
 @Data
 public class ImageGenerationResponse {
 
-  private String id = UUID.randomUUID().toString(); // 鍝嶅簲ID
+  private String id = UUID.randomUUID().toString(); // 响应ID
 
-  private String modelType; // 浣跨敤鐨勬ā鍨嬬被鍨?
+  private String modelType; // 使用的模型类型
 
-  private LocalDateTime createdAt = LocalDateTime.now(); // 鍒涘缓鏃堕棿
+  private LocalDateTime createdAt = LocalDateTime.now(); // 创建时间
 
-  private List<ImageData> images; // 鐢熸垚鐨勫浘鐗囧垪琛?
+  private List<ImageData> images; // 生成的图片列表
 
   @Data
   public static class ImageData {
-    private String url; // 鍥剧墖URL
-    private String base64; // 鍥剧墖鐨刡ase64缂栫爜
-    private String finishReason; // 鐢熸垚缁撴潫鐨勫師鍥?
+    private String url; // 图片URL
+    private String base64; // 图片的base64编码
+    private String finishReason; // 生成结束的原因
   }
 }

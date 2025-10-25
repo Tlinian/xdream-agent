@@ -6,21 +6,21 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@Schema(description = "鍒涘缓鍒嗙被璇锋眰")
+@Schema(description = "创建分类请求")
 public class CreateCategoryRequest {
-    
-    @NotBlank(message = "鍒嗙被鍚嶇О涓嶈兘涓虹┖")
-    @Size(max = 100, message = "鍒嗙被鍚嶇О涓嶈兘瓒呰繃100涓瓧绗?)
-    @Schema(description = "鍒嗙被鍚嶇О", requiredMode = Schema.RequiredMode.REQUIRED)
+
+    @NotBlank(message = "分类名称不能为空")
+    @Size(max = 100, message = "分类名称不能超过100个字符")
+    @Schema(description = "分类名称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
-    
-    @Size(max = 500, message = "鍒嗙被鎻忚堪涓嶈兘瓒呰繃500涓瓧绗?)
-    @Schema(description = "鍒嗙被鎻忚堪")
+
+    @Size(max = 500, message = "分类描述不能超过500个字符")
+    @Schema(description = "分类描述")
     private String description;
-    
-    @Schema(description = "鐖跺垎绫籌D")
+
+    @Schema(description = "父分类ID")
     private String parentId;
-    
-    @Schema(description = "鎺掑簭搴忓彿")
+
+    @Schema(description = "排序序号")
     private Integer sortOrder = 0;
 }
