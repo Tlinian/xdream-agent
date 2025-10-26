@@ -9,6 +9,18 @@ export interface ChatMessage {
   tokens?: number
 }
 
+// 知识检索配置
+export interface KnowledgeConfig {
+  enabled?: boolean
+  knowledgeBaseId?: string
+  knowledgeBaseIds?: string[]
+  topK?: number
+  similarityThreshold?: number
+  useRerank?: boolean
+  rerankTopK?: number
+  appendCitations?: boolean
+}
+
 // 聊天请求接口
 export interface ChatRequest {
   message: string
@@ -22,6 +34,7 @@ export interface ChatRequest {
   presencePenalty?: number
   stream?: boolean
   useReAct?: boolean
+  knowledge?: KnowledgeConfig
   messages?: Array<{
     role: string
     content: string

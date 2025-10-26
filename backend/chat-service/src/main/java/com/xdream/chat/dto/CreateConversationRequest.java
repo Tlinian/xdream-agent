@@ -23,4 +23,7 @@ public class CreateConversationRequest {
 
   @Schema(description = "系统提示词", example = "你是一个Java编程专家")
   private String systemPrompt;
+
+  @Schema(description = "关联的知识库ID", example = "kb_123456")
+  private String knowledgeBaseId;
 }

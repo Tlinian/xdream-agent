@@ -14,6 +14,7 @@ import {
   Tag,
   Tooltip,
   Typography,
+  Select,
 } from 'antd'
 import {
   BulbOutlined,
@@ -30,6 +31,7 @@ import {
 } from '@ant-design/icons'
 import { chatService, StreamResponse } from '@services/chatService'
 import './index.scss'
+import { knowledgeService } from '@services/knowledgeService';
 
 const { TextArea } = Input
 const { Paragraph, Text } = Typography
@@ -92,7 +94,12 @@ const ChatPage: React.FC = () => {
   const [useReAct, setUseReAct] = useState(false)
   const [selectedModel, setSelectedModel] = useState<string>(modelOptions[0].value)
   const [insightCollapsed, setInsightCollapsed] = useState(false)
+  // 知识库相关状态
+  const [knowledgeEnabled, setKnowledgeEnabled] = useState<boolean>(false)
+  const [knowledgeBases, setKnowledgeBases] = useState<any[]>([])
+  const [selectedKnowledgeBaseId, setSelectedKnowledgeBaseId] = useState<string | undefined>(undefined)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const USER_ID = 'test-user-001'
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -101,6 +108,19 @@ const ChatPage: React.FC = () => {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // 初始加载知识库列表，确保下拉可用
+  useEffect(() => {
+    const fetchKBs = async () => {
+      try {
+        const list = await knowledgeService.getKnowledgeBases(USER_ID)
+        setKnowledgeBases(Array.isArray(list) ? list : [])
+      } catch (err) {
+        console.error('初始加载知识库失败', err)
+      }
+    }
+    void fetchKBs()
+  }, [])
 
   const conversationStats = useMemo(() => {
     if (messages.length === 0) {
@@ -165,6 +185,16 @@ const ChatPage: React.FC = () => {
         stream: true,
       }
 
+      // 传递知识检索参数（用户选择即传递）
+      if (selectedKnowledgeBaseId) {
+        (requestData as any).knowledge = {
+          enabled: true,
+          knowledgeBaseIds: [selectedKnowledgeBaseId],
+          appendCitations: true,
+          topK: 6,
+          similarityThreshold: 0.6,
+        }
+      }
       const assistantTimestamp = Date.now()
       const assistantMessage: Message = {
         id: `assistant-${assistantTimestamp}`,
@@ -690,25 +720,52 @@ const ChatPage: React.FC = () => {
               size="small"
               bordered={false}
             >
-              <Divider orientation="left">模型选择</Divider>
-              <Radio.Group
-                value={selectedModel}
-                onChange={(event) => setSelectedModel(event.target.value)}
-                className="model-selector"
-              >
-                <Space direction="vertical">
-                  {modelOptions.map((option) => (
-                    <Radio key={option.value} value={option.value}>
-                      {option.label}
-                    </Radio>
-                  ))}
-                </Space>
-              </Radio.Group>
 
-              <Divider orientation="left">诊断工具</Divider>
-              <Button block onClick={testChatService} icon={<ThunderboltOutlined />}>
-                测试服务连通性
-              </Button>
+                  {/* 模型选择 */}
+                  <Radio.Group
+                    value={selectedModel}
+                    onChange={(event) => setSelectedModel(event.target.value)}
+                    className="model-selector"
+                  >
+                    <Space direction="vertical">
+                      {modelOptions.map((option) => (
+                        <Radio key={option.value} value={option.value}>
+                          {option.label}
+                        </Radio>
+                      ))}
+                    </Space>
+                  </Radio.Group>
+                
+                  {/* 知识检索 */}
+                  <Divider orientation="left">知识检索</Divider>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span>启用知识库</span>
+                    <Switch checked={knowledgeEnabled} onChange={setKnowledgeEnabled} />
+                  </div>
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="选择知识库"
+                    disabled={!knowledgeEnabled}
+                    value={selectedKnowledgeBaseId}
+                    onChange={(val) => { setSelectedKnowledgeBaseId(val); setKnowledgeEnabled(true); }}
+                    options={knowledgeBases.map((kb) => ({
+                      value: kb.id,
+                      label: (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span>{kb.name || kb.title || kb.id}</span>
+                          <span style={{ color: '#999', fontSize: 12 }}>
+                            {(kb.description || '无描述') + ' · 创建于 ' + (kb.createdAt ? new Date(kb.createdAt).toLocaleString() : '--')}
+                          </span>
+                        </div>
+                      ),
+                    }))}
+                  />
+                
+                  {/* 诊断工具 */}
+                  <Divider orientation="left">诊断工具</Divider>
+                  <Button block onClick={testChatService} icon={<ThunderboltOutlined />}>
+                    测试服务连通性
+                  </Button>
             </Card>
           </div>
         </aside>

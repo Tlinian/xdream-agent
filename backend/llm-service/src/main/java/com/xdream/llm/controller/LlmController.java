@@ -47,7 +47,15 @@ public class LlmController {
       @Parameter(description = "系统提示词") @RequestParam(required = false) String systemPrompt,
       @Parameter(description = "是否启用ReAct模式")
           @RequestParam(required = false, defaultValue = "false")
-          Boolean useReAct) {
+          Boolean useReAct,
+      // 知识检索相关参数
+      @RequestParam(required = false) String knowledgeBaseId,
+      @RequestParam(required = false) String knowledgeBaseIds,
+      @RequestParam(required = false) Integer topK,
+      @RequestParam(required = false) Double similarityThreshold,
+      @RequestParam(required = false) Boolean useRerank,
+      @RequestParam(required = false) Integer rerankTopK,
+      @RequestParam(required = false) Boolean appendCitations) {
 
     // 优先使用请求头的用户ID，如果没有则使用URL参数的用户ID，如果都没有则使用默认值
     String userId =
@@ -62,15 +70,40 @@ public class LlmController {
     request.setMaxTokens(maxTokens);
     request.setUseReAct(useReAct);
 
-    systemPrompt = "你是AI智能体小梦，你能帮助解答问题、提供建议、协助创作或处理各种任务。无论是学习、工作、生活还是娱乐相关的问题，你都会尽力提供清晰、有用的信息。";
+    // 系统提示词：如未提供则使用默认
+    if (systemPrompt == null || systemPrompt.isBlank()) {
+      systemPrompt = "你是AI智能体小梦，你能帮助解答问题、提供建议、协助创作或处理各种任务。无论是学习、工作、生活还是娱乐相关的问题，你都会尽力提供清晰、有用的信息。";
+    }
     request.setSystemPrompt(systemPrompt);
 
-      ChatRequest.Message systemMessage = new ChatRequest.Message();
-      systemMessage.setRole("system");
-      systemMessage.setContent(systemPrompt);
-      request.setMessages(List.of(systemMessage));
+    ChatRequest.Message systemMessage = new ChatRequest.Message();
+    systemMessage.setRole("system");
+    systemMessage.setContent(systemPrompt);
+    request.setMessages(List.of(systemMessage));
 
-      return llmService.streamChat(userId, request);
+    // 组装知识检索配置
+    boolean hasIds = knowledgeBaseId != null && !knowledgeBaseId.isBlank();
+    if (!hasIds && knowledgeBaseIds != null && !knowledgeBaseIds.isBlank()) {
+      // 目前后端检索仅支持单个知识库ID，取第一个
+      String[] parts = knowledgeBaseIds.split(",");
+      if (parts.length > 0) {
+        knowledgeBaseId = parts[0].trim();
+        hasIds = !knowledgeBaseId.isBlank();
+      }
+    }
+    if (hasIds || topK != null || similarityThreshold != null || useRerank != null || rerankTopK != null || appendCitations != null) {
+      ChatRequest.KnowledgeConfig knowledge = new ChatRequest.KnowledgeConfig();
+      knowledge.setEnabled(hasIds);
+      knowledge.setKnowledgeBaseId(knowledgeBaseId);
+      if (topK != null) knowledge.setTopK(topK);
+      if (similarityThreshold != null) knowledge.setSimilarityThreshold(similarityThreshold);
+      if (useRerank != null) knowledge.setUseRerank(useRerank);
+      if (rerankTopK != null) knowledge.setRerankTopK(rerankTopK);
+      if (appendCitations != null) knowledge.setAppendCitations(appendCitations);
+      request.setKnowledge(knowledge);
+    }
+
+    return llmService.streamChat(userId, request);
   }
 
 
