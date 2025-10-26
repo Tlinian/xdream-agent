@@ -1,0 +1,86 @@
+.knowledge-page {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 64px);
+
+  .page-header {
+    margin-bottom: 24px;
+    
+    h2 {
+      margin-bottom: 8px;
+      color: #262626;
+    }
+  }
+
+  .stats-container {
+    margin-bottom: 24px;
+    
+    .ant-card {
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      
+      .ant-statistic-title {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 4px;
+      }
+      
+      .ant-statistic-content {
+        font-size: 24px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+  }
+
+  .ant-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      
+      .ant-card-head-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+  }
+
+  .knowledge-base-name {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+      font-weight: 600;
+      color: #262626;
+    }
+    
+    .ant-table-tbody > tr:hover > td {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .ant-modal {
+    .ant-modal-header {
+      border-bottom: 1px solid #f0f0f0;
+      
+      .ant-modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+    
+    .ant-form-item-label > label {
+      font-weight: 500;
+      color: #262626;
+    }
+  }
+}

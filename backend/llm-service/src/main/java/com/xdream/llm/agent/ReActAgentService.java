@@ -256,7 +256,7 @@ public class ReActAgentService {
 
     // 如果达到最大迭代次数但仍未得到最终答案，使用当前信息生成一个答案
     if (finalAnswer == null) {
-      finalAnswer = generateFallbackAnswer(userMessage, agent);
+      finalAnswer = generateFallbackAnswer(request.getMessage(), agent);
       log.info("达到最大迭代次数，生成回退答案: {}", finalAnswer);
     }
 
@@ -265,7 +265,7 @@ public class ReActAgentService {
     response.setId(UUID.randomUUID().toString());
     response.setResponse(finalAnswer);
     response.setModelType(llmProperties.getChat().getModel());
-    response.setTokenUsage(estimateTokenUsage(userMessage, finalAnswer));
+    response.setTokenUsage(estimateTokenUsage(request.getMessage(), finalAnswer));
     response.setFinishReason("stop");
     response.setResponseTime(LocalDateTime.now());
     response.setCreatedAt(LocalDateTime.now());

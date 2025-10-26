@@ -1,26 +1,33 @@
 package com.xdream.common.entity;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@MappedSuperclass
 public abstract class BaseEntity {
 
   @Id private String id;
 
-  @CreatedDate private LocalDateTime createdAt;
+  @CreatedDate 
+  @Column(name = "created_at")
+  private LocalDateTime createdAt;
 
-  @LastModifiedDate private LocalDateTime updatedAt;
+  @LastModifiedDate 
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   private String createdBy;
 

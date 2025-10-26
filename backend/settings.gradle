@@ -1,5 +1,8 @@
 rootProject.name = 'xdream-agent-backend'
 
+// 注册中心
+include 'eureka-server'
+
 // 核心服务
 include 'gateway'
 include 'auth-service'

@@ -1,0 +1,117 @@
+﻿data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"Sure","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" Here","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"'s","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" a","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" light","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"-hearted","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" one","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" for","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" you","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":":","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n\n","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"**","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"Why","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" don","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"’","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"t","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" skeletons","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" fight","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" each","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" other","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"?","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"**","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"Because","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" they","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" don","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"’","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"t","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" have","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" the","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" *","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"g","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"uts","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"*","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n\n","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"(","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"\uD83D\uDE06","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" Bone","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"-app","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"ét","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"it","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"!)","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" Need","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" another","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"?","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" Or","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" maybe","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" a","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" specific","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" kind","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" of","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":" joke","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"?","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":false}
+
+data:{"streamId":"36972a6b-c2c8-42d0-b901-0aec9565fe4f","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":true,"finishReason":"stop","tokenUsage":3}
+
+

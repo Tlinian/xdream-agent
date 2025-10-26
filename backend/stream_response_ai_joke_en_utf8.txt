@@ -1,0 +1,153 @@
+﻿data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Sure","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" Here","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"'s","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" a","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" light","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"hearted","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" AI","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" joke","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" for","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" you","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":":","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n\n","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"**","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Why","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" did","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" the","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" AI","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" break","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" up","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" with","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" its","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" chatbot","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" girlfriend","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"?","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"**","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Because","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" it","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" found","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" her","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" responses","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" *","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"too","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" predictable","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"*","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n\n","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"(","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Alternatively","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":":","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" **","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Because","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" she","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" kept","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" giving","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" him","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" mixed","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" signals","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"—","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"binary","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" ones","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"**)","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"  \n\n","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"Hope","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" that","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" gives","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" you","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" a","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" chuckle","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"!","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" Let","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" me","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" know","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" if","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" you","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"'d","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" like","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" another","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" one","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":".","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":" \uD83D\uDE04","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":false}
+
+data:{"streamId":"50b3bf36-accc-408e-93fc-bdc82808cc17","modelType":"deepseek-ai/DeepSeek-V3","content":"","finished":true,"finishReason":"stop","tokenUsage":10}
+
+

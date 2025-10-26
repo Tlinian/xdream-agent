@@ -7,42 +7,39 @@ plugins {
 dependencies {
     implementation project(':common')
     implementation project(':common-database')
-    
+
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    
+
     // Spring Cloud
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    
+
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    
+
     // Database
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql'
 
     implementation 'org.apache.commons:commons-lang3'
-    
+
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    
-    // Elasticsearch
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    
+
     // MapStruct
     implementation 'org.mapstruct:mapstruct'
     annotationProcessor 'org.mapstruct:mapstruct-processor'
-    
+
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    
+
     // Configuration Processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    
+
     // Test Dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -59,4 +56,3 @@ dependencyManagement {
 test {
     useJUnitPlatform()
 }
-

@@ -1,4 +1,4 @@
-﻿package com.xdream.llm.config;
+package com.xdream.llm.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

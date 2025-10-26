@@ -44,7 +44,7 @@ public class KnowledgeMapper {
         }
         DocumentResponse response = new DocumentResponse();
         response.setDocumentId(entity.getId());
-        response.setKnowledgeBaseId(entity.getKnowledgeBaseId());
+//        response.setKnowledgeBaseId(entity.getKnowledgeBaseId());
         response.setTitle(entity.getTitle());
         response.setDescription(entity.getDescription());
         response.setContent(entity.getContent());
@@ -73,4 +73,3 @@ public class KnowledgeMapper {
                 .collect(Collectors.toList());
     }
 }
-

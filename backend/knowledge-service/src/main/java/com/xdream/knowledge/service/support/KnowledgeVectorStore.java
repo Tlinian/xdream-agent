@@ -1,4 +1,4 @@
-﻿package com.xdream.knowledge.service.support;
+package com.xdream.knowledge.service.support;
 
 import org.postgresql.util.PGobject;
 import com.xdream.knowledge.model.KnowledgeSegmentRecord;
@@ -46,7 +46,7 @@ public class KnowledgeVectorStore {
                         "chunk_index INT NOT NULL," +
                         "content TEXT NOT NULL," +
                         "token_count INT," +
-                        "embedding vector(1536)," +
+                        "embedding vector(1024)," +
                         "created_at TIMESTAMP DEFAULT NOW()," +
                         "updated_at TIMESTAMP DEFAULT NOW()" +
                         ")");
@@ -178,7 +178,7 @@ public class KnowledgeVectorStore {
         );
         return count == null ? 0L : count;
     }
-    
+
     private PGobject createPgVector(float[] embedding) throws SQLException {
         if (embedding == null) {
             return null;
@@ -199,6 +199,3 @@ public class KnowledgeVectorStore {
     }
 
 }
-
-
-

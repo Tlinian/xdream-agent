@@ -7,6 +7,7 @@ const config: AxiosRequestConfig = {
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // 支持跨域携带cookie
 }
 
 // 多模态服务请求配置

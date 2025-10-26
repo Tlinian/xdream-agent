@@ -1,0 +1,134 @@
+.document-manage-page {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 64px);
+
+  .page-header {
+    margin-bottom: 24px;
+    
+    h2 {
+      margin-bottom: 8px;
+    }
+  }
+
+  .document-title {
+    display: flex;
+    align-items: center;
+    
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .ant-card {
+    margin-bottom: 16px;
+  }
+
+  .ant-table-wrapper {
+    margin-top: 16px;
+  }
+
+  .ant-tag {
+    margin-right: 4px;
+  }
+
+  .ant-btn {
+    margin-right: 8px;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+
+  .ant-upload-drag {
+    padding: 24px;
+    background-color: #fafafa;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    
+    &:hover {
+      border-color: #1890ff;
+    }
+  }
+
+  .ant-upload-drag-icon {
+    font-size: 48px;
+    color: #1890ff;
+    margin-bottom: 16px;
+  }
+
+  .ant-upload-text {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.85);
+    margin-bottom: 8px;
+  }
+
+  .ant-upload-hint {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .ant-progress {
+    margin-top: 16px;
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+  }
+
+  .ant-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: #fafafa;
+  }
+
+  .ant-table-tbody > tr:hover > td {
+    background-color: #f5f5f5;
+  }
+
+  .ant-pagination {
+    margin-top: 16px;
+    text-align: right;
+  }
+
+  .ant-empty {
+    margin: 40px 0;
+  }
+
+  .ant-result {
+    padding: 48px 0;
+  }
+
+  .ant-result-title {
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .ant-result-subtitle {
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .ant-tooltip-inner {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  .ant-tooltip-arrow-content {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  .ant-modal-info .ant-modal-confirm-btns {
+    display: none;
+  }
+
+  .ant-modal-confirm-body .ant-modal-confirm-content {
+    margin-top: 8px;
+  }
+}

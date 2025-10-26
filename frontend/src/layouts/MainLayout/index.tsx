@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Layout, Menu, Avatar, Dropdown, Button, Space, theme } from 'antd'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { UserOutlined, HomeOutlined, MessageOutlined, SettingOutlined, AppstoreOutlined, PictureOutlined, VideoCameraOutlined, AudioOutlined, ThunderboltOutlined, SoundOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { UserOutlined, HomeOutlined, MessageOutlined, SettingOutlined, AppstoreOutlined, PictureOutlined, VideoCameraOutlined, AudioOutlined, ThunderboltOutlined, SoundOutlined, MenuFoldOutlined, MenuUnfoldOutlined, BookOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './index.scss'
 
@@ -37,6 +37,12 @@ const MainLayout: React.FC = () => {
       icon: <MessageOutlined />,
       label: 'AI对话',
       onClick: () => navigate('/chat')
+    },
+    {
+      key: '/knowledge',
+      icon: <BookOutlined />,
+      label: '知识库',
+      onClick: () => navigate('/knowledge')
     },
     {
       key: 'multimodal-menu',

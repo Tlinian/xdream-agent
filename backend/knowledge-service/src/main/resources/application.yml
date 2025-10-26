@@ -9,17 +9,10 @@ spring:
   
   # 数据库配置
   datasource:
-    url: jdbc:h2:mem:knowledgedb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: 
-    
-  # PostgreSQL配置（生产环境）
-  # datasource:
-  #   url: jdbc:postgresql://localhost:5432/knowledge_db
-  #   driver-class-name: org.postgresql.Driver
-  #   username: ${DB_USERNAME:knowledge_user}
-  #   password: ${DB_PASSWORD:knowledge_password}
+    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 123456
   
   # JPA配置
   jpa:
@@ -28,8 +21,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        # dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     
   # Redis配置
@@ -45,12 +37,6 @@ spring:
           max-active: 8
           max-idle: 8
           min-idle: 0
-    
-    # Elasticsearch配置
-    elasticsearch:
-      uris: http://localhost:9200
-      username: ${ES_USERNAME:}
-      password: ${ES_PASSWORD:}
   
   # 文件上传配置
   servlet:
@@ -58,15 +44,15 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
 
-# Eureka注册中心配置
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 30
-    lease-expiration-duration-in-seconds: 90
+# Eureka配置已禁用
+# eureka:
+#   client:
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka/
+#   instance:
+#     prefer-ip-address: true
+#     lease-renewal-interval-in-seconds: 30
+#     lease-expiration-duration-in-seconds: 90
 
 # 监控配置
 management:
@@ -143,12 +129,11 @@ spring:
     activate:
       on-profile: prod
   
-  # 生产环境数据库配置
   datasource:
-    url: jdbc:postgresql://localhost:5432/knowledge_db
+    url: jdbc:postgresql://localhost:5432/postgres
     driver-class-name: org.postgresql.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: postgres
+    password: 123456
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5

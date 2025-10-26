@@ -20,6 +20,11 @@ public class SecurityConfig {
                 // 允许访问的公开路径
                 .pathMatchers(HttpMethod.GET, "/api/llm/chat/stream").permitAll()
                 .pathMatchers(HttpMethod.OPTIONS, "/api/llm/chat/stream").permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/knowledge/**").permitAll()
+                .pathMatchers(HttpMethod.POST, "/api/knowledge/**").permitAll()
+                .pathMatchers(HttpMethod.PUT, "/api/knowledge/**").permitAll()
+                .pathMatchers(HttpMethod.DELETE, "/api/knowledge/**").permitAll()
+                .pathMatchers(HttpMethod.OPTIONS, "/api/knowledge/**").permitAll()
                 .pathMatchers("/actuator/health").permitAll()
                 .pathMatchers("/eureka/**").permitAll()
                 // 其他所有请求都需要认证

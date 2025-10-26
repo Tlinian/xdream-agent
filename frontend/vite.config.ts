@@ -45,6 +45,23 @@ export default defineConfig({
           });
         },
       },
+      '/api/knowledge': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('Knowledge proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Knowledge Request through Gateway:', req.method, req.url);
+            console.log('Headers:', req.headers);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Knowledge Response from Gateway:', proxyRes.statusCode, req.url);
+          });
+        },
+      },
       '/api/chat': {
         target: 'http://127.0.0.1:8084',
         changeOrigin: true,

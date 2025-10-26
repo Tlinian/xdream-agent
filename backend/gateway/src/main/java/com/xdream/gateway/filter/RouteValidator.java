@@ -14,6 +14,7 @@ public class RouteValidator {
           "/api/auth/login",
           "/api/auth/refresh",
           "/api/llm/chat/stream",
+          "/api/knowledge",
           "/actuator/health",
           "/eureka");
 

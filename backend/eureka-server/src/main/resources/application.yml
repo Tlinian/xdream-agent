@@ -1,0 +1,34 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+# Eureka服务器配置
+eureka:
+  client:
+    # 表示是否将自己注册到Eureka服务器，默认为true
+    register-with-eureka: false
+    # 表示是否从Eureka服务器获取注册信息，默认为true
+    fetch-registry: false
+    service-url:
+      # 设置与Eureka服务器交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://localhost:8761/eureka/
+  server:
+    # 关闭自我保护模式
+    enable-self-preservation: false
+    # 清理间隔（单位毫秒，默认是60*1000）
+    eviction-interval-timer-in-ms: 5000
+    # 设置失效节点的读超时时间（单位毫秒）
+    peer-node-read-timeout-ms: 200
+    # 设置失效节点的连接超时时间（单位毫秒）
+    peer-node-connect-timeout-ms: 200
+
+# 日志配置
+logging:
+  level:
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

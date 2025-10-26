@@ -316,20 +316,12 @@ public class LlmServiceImpl implements LlmService {
       return client.generateEmbeddingsFromApi(userId, request);
     } catch (Exception ex) {
       log.error("Fallback to mock embedding due to error: {}", ex.getMessage());
-      int dimensions = 1536;
-      List<Float> embedding = generateMockEmbedding(dimensions);
-      EmbeddingResponse fallback = new EmbeddingResponse();
-      fallback.setId(UUID.randomUUID().toString());
-      fallback.setModelType(request.getModelType());
-      fallback.setEmbedding(embedding);
-      fallback.setDimensions(dimensions);
-      fallback.setTokenUsage(estimateTokenUsage(request.getText(), ""));
-      fallback.setCreatedAt(LocalDateTime.now());
-      return fallback;
+      return generateMockEmbeddingResponse(userId, request);
     }
   }
 
   // 模拟嵌入向量生成
+  private EmbeddingResponse generateMockEmbeddingResponse(String userId, EmbeddingRequest request) {
     int dimensions = 1536; // ADA-002的维度
     List<Float> embedding = generateMockEmbedding(dimensions);
     int tokenUsage = estimateTokenUsage(request.getText(), "");
@@ -356,7 +348,7 @@ public class LlmServiceImpl implements LlmService {
   public RerankResponse rerank(String userId, RerankRequest request) {
     log.info("Rerank request for user: {}", userId);
     if (request.getDocuments() == null || request.getDocuments().isEmpty()) {
-      throw new IllegalArgumentException("閲嶆帓搴忔枃妗ｉ泦鍚堜笉鑳戒负绌?);
+      throw new IllegalArgumentException("重排文档集合不能为空");
     }
     return client.rerank(userId, request);
   }
@@ -746,7 +738,7 @@ public class LlmServiceImpl implements LlmService {
 
     try {
       ApiResponse<KnowledgeSearchResponse> searchResponse = knowledgeSearchClient.search(userId, baseId, searchRequest);
-      if (searchResponse == null || !Boolean.TRUE.equals(searchResponse.getSuccess()) || searchResponse.getData() == null || CollectionUtils.isEmpty(searchResponse.getData().getResults())) {
+      if (searchResponse == null || !searchResponse.isSuccess() || searchResponse.getData() == null || CollectionUtils.isEmpty(searchResponse.getData().getResults())) {
         log.info("Knowledge search returned no results");
         return;
       }

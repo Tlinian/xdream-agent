@@ -38,5 +38,5 @@ public interface KnowledgeDocumentRepository extends JpaRepository<KnowledgeDocu
     /**
      * 查询指定知识库下的全部文档并按时间倒序排序。
      */
-    List<KnowledgeDocumentEntity> findByKnowledgeBaseIdAndCreatedByOrderByCreatedAtDesc(String knowledgeBaseId, String userId);\n}
-
+    List<KnowledgeDocumentEntity> findByKnowledgeBaseIdAndCreatedByOrderByCreatedAtDesc(String knowledgeBaseId, String userId);
+}

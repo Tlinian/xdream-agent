@@ -62,11 +62,11 @@ spring:
         
         # 知识库服务路由
         - id: knowledge-service
-          uri: lb://knowledge-service
+          uri: http://localhost:8085
           predicates:
             - Path=/api/knowledge/**
           filters:
-            - name: AuthenticationFilter
+            - RewritePath=/api/knowledge/(?<segment>.*), /knowledge/api/knowledge/${segment}
         
         # 任务服务路由
         - id: task-service

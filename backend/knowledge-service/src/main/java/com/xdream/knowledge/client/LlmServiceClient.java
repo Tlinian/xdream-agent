@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 /**
  * 对接 LLM 服务的 Feign Client，用于获取嵌入向量及重排序结果。
  */
-@FeignClient(name = "llm-service", path = "/llm", contextId = "knowledgeLlmClient")
+@FeignClient(name = "llm-service", url = "http://localhost:8084", path = "/api/llm", contextId = "knowledgeLlmClient")
 public interface LlmServiceClient {
 
     /**

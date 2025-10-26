@@ -2,12 +2,12 @@ package com.xdream.llm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@SpringBootApplication
-@EnableDiscoveryClient
+@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @EnableFeignClients(basePackages = "com.xdream.llm")
 @EnableAsync
 @ComponentScan(basePackages = {"com.xdream.llm", "com.xdream.common"})

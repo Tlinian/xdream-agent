@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class LlmProperties {
   private ChatProperties chat;
   private TextToImageProperties textToImage;
+  private EmbeddingProperties embedding;
+  private RerankProperties rerank;
 
   @Data
   public static class ChatProperties {
@@ -30,6 +32,24 @@ public class LlmProperties {
     private String apiKey;
     private Integer timeout;
     private Integer maxTokens;
+  }
+
+  @Data
+  public static class EmbeddingProperties {
+    private String model;
+    private String baseUrl;
+    private String interfaceUrl;
+    private String apiKey;
+    private Integer timeout;
+  }
+
+  @Data
+  public static class RerankProperties {
+    private String model;
+    private String baseUrl;
+    private String interfaceUrl;
+    private String apiKey;
+    private Integer timeout;
   }
 }
 

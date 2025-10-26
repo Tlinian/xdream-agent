@@ -91,7 +91,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     }
 
     @Override
-    @Transactional\n    public KnowledgeBaseListResponse listKnowledgeBases(String userId) {
+    @Transactional
+    public KnowledgeBaseListResponse listKnowledgeBases(String userId) {
         List<KnowledgeBaseEntity> bases = knowledgeBaseRepository.findByOwnerIdOrderByCreatedAtDesc(userId);
         if (CollectionUtils.isEmpty(bases)) {
             bases = List.of(createDefaultBase(userId));
@@ -219,7 +220,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
                 embeddingRequest.setText(chunk.getContent());
                 embeddingRequest.setModelType(null);
                 ApiResponse<EmbeddingResponseDto> embeddingResponse = llmServiceClient.embedding(userId, embeddingRequest);
-                if (embeddingResponse == null || !Boolean.TRUE.equals(embeddingResponse.getSuccess())) {
+                if (embeddingResponse == null || !embeddingResponse.isSuccess()) {
                     throw new BusinessException(ErrorCode.EXTERNAL_SERVICE_ERROR, "调用嵌入服务失败: " +
                             (embeddingResponse != null ? embeddingResponse.getMessage() : "未知错误"));
                 }
@@ -280,7 +281,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         embeddingRequest.setText(request.getQuery());
         embeddingRequest.setModelType(null);
         ApiResponse<EmbeddingResponseDto> embeddingResponse = llmServiceClient.embedding(userId, embeddingRequest);
-        if (embeddingResponse == null || !Boolean.TRUE.equals(embeddingResponse.getSuccess())) {
+        if (embeddingResponse == null || !embeddingResponse.isSuccess()) {
             throw new BusinessException(ErrorCode.EXTERNAL_SERVICE_ERROR, "嵌入服务响应异常");
         }
         float[] queryVector = toFloatArray(embeddingResponse.getData().getEmbedding());
@@ -330,7 +331,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
             try {
                 ApiResponse<RerankResponseDto> rerankResponse = llmServiceClient.rerank(userId, rerankRequest);
-                if (rerankResponse != null && Boolean.TRUE.equals(rerankResponse.getSuccess()) && rerankResponse.getData() != null) {
+                if (rerankResponse != null && rerankResponse.isSuccess() && rerankResponse.getData() != null) {
                     Map<Integer, Double> scoreMap = new HashMap<>();
                     rerankResponse.getData().getResults().forEach(item -> scoreMap.put(item.getIndex(), item.getScore()));
                     for (int i = 0; i < results.size(); i++) {
@@ -396,7 +397,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     }
 
     private KnowledgeBaseEntity ensureKnowledgeBase(String userId, String knowledgeBaseId) {
-        return knowledgeBaseRepository.findById(knowledgeBaseId)
+        Optional<KnowledgeBaseEntity> repository = knowledgeBaseRepository.findById(knowledgeBaseId);
+        return repository
                 .filter(base -> Objects.equals(base.getOwnerId(), userId))
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "知识库不存在或无权访问"));
     }

@@ -10,6 +10,7 @@ import {
   SettingOutlined,
   AppstoreOutlined,
   ThunderboltOutlined,
+  BookOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAppStore } from '@stores/useAppStore'
@@ -27,6 +28,11 @@ const menuItems = [
     key: '/chat',
     icon: <MessageOutlined />,
     label: '智能对话',
+  },
+  {
+    key: '/knowledge',
+    icon: <BookOutlined />,
+    label: '知识库',
   },
   {
     key: 'multimodal',

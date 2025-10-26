@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @Entity
 @Table(name = "knowledge_bases")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"id"})
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -53,4 +53,3 @@ public class KnowledgeBaseEntity extends BaseEntity {
     @Column(name = "last_indexed_at")
     private java.time.LocalDateTime lastIndexedAt;
 }
-

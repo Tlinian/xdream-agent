@@ -1,0 +1,123 @@
+.knowledge-detail-page {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 64px);
+
+  .page-header {
+    margin-bottom: 24px;
+    
+    h2 {
+      margin-bottom: 8px;
+    }
+  }
+
+  .document-title {
+    display: flex;
+    align-items: center;
+    
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .ant-card {
+    margin-bottom: 16px;
+    
+    .ant-statistic {
+      text-align: center;
+      
+      .ant-statistic-content {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .ant-descriptions {
+    margin-bottom: 16px;
+  }
+
+  .ant-table-wrapper {
+    margin-top: 16px;
+  }
+
+  .ant-tag {
+    margin-right: 4px;
+  }
+
+  .ant-btn {
+    margin-right: 8px;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .ant-tabs-content-holder {
+    padding-top: 16px;
+  }
+
+  .ant-form-inline {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+
+  .ant-typography {
+    margin-bottom: 8px;
+  }
+
+  .ant-statistic-title {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .ant-statistic-content {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .ant-card-body {
+    padding: 24px;
+  }
+
+  .ant-descriptions-item-label {
+    font-weight: 500;
+  }
+
+  .ant-descriptions-item-content {
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: #fafafa;
+  }
+
+  .ant-table-tbody > tr:hover > td {
+    background-color: #f5f5f5;
+  }
+
+  .ant-pagination {
+    margin-top: 16px;
+    text-align: right;
+  }
+
+  .ant-empty {
+    margin: 40px 0;
+  }
+
+  .ant-result {
+    padding: 48px 0;
+  }
+
+  .ant-result-title {
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .ant-result-subtitle {
+    color: rgba(0, 0, 0, 0.45);
+  }
+}

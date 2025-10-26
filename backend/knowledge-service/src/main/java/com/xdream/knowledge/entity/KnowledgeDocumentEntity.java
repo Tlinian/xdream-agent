@@ -1,15 +1,8 @@
 package com.xdream.knowledge.entity;
 
 import com.xdream.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,12 +12,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @Entity
 @Table(name = "knowledge_documents")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"id"})
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @EntityListeners(AuditingEntityListener.class)
 public class KnowledgeDocumentEntity extends BaseEntity {
+
+    /** 文档ID */
+    @Id
+    @Column(name = "id", nullable = false, length = 64)
+    @Setter(AccessLevel.NONE)
+    private String id;
 
     /** 所属知识库 ID */
     @Column(name = "knowledge_base_id", nullable = false, length = 64)
@@ -83,4 +82,3 @@ public class KnowledgeDocumentEntity extends BaseEntity {
     @Column(name = "processed_at")
     private java.time.LocalDateTime processedAt;
 }
-
